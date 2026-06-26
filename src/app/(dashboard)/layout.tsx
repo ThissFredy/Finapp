@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { UserMenu } from "@/components/auth/UserMenu";
+import { NavBar } from "@/components/layout/NavBar";
 import { getServerSession } from "@/core/services/auth.service";
 
 export default async function DashboardLayout({
@@ -25,6 +26,8 @@ export default async function DashboardLayout({
             </div>
             <span className="text-lg font-bold tracking-tight">FinApp</span>
           </Link>
+
+          <NavBar />
 
           <UserMenu session={session} />
         </div>

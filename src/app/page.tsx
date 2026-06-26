@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { getServerSession } from "@/core/services/auth.service";
 
 export default async function HomePage() {
@@ -30,9 +31,12 @@ export default async function HomePage() {
           solo lugar. Inicia sesión con tu cuenta de Google para comenzar.
         </p>
 
-        <Button asChild size="lg" className="min-w-[200px]">
-          <Link href="/login">Comenzar ahora</Link>
-        </Button>
+        <Link
+          href="/login"
+          className={cn(buttonVariants({ size: "lg" }), "min-w-[200px]")}
+        >
+          Comenzar ahora
+        </Link>
       </main>
     </div>
   );

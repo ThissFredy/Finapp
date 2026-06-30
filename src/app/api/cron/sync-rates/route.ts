@@ -2,9 +2,14 @@ import { createClient } from "@supabase/supabase-js";
 
 export async function GET(request: Request) {
   // Verificar autorización (Vercel Cron envía CRON_SECRET)
-  const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return new Response("Unauthorized", { status: 401 });
+  const cronSecret = process.env.CRON_SECRET
+  if (!cronSecret) {
+    return new Response("CRON_SECRET is not configured", { status: 500 })
+  }
+
+  const authHeader = request.headers.get("authorization")
+  if (authHeader !== `Bearer ${cronSecret}`) {
+    return new Response("Unauthorized", { status: 401 })
   }
 
   // Fetch tasas desde API gratuita (open.er-api.com, sin API key)

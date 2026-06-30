@@ -64,7 +64,7 @@ export const UpdateAccountSchema = z
   .refine(
     (data) =>
       !data.type ||
-      !data.initial_balance ||
+      data.initial_balance === undefined ||
       data.type !== "CASH" ||
       data.initial_balance >= 0,
     {

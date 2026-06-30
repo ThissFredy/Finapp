@@ -1,9 +1,0 @@
-# Minimal Supabase CLI configuration template for local development.
-# This file is intentionally not linked to any remote project.
-# Replace <local-project-id> with a local reference when using the Supabase CLI.
-
-project_id = "<local-project-id>"
-
-[api]
-port = 54321
-schemas = ["public", "storage", "graphql_public"]

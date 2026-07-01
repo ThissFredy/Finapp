@@ -86,6 +86,7 @@ Diseño relacional estructurado. La seguridad se gestiona mediante **Políticas 
 * `user_id` (UUID, FK -> `auth.users.id`)
 * `name` (String)
 * `type` (Enum: DEBIT, CREDIT, CASH)
+* `status` (Enum: ACTIVE, INACTIVE)
 * `balance` (Decimal)
 * `currency` (String, ej. 'COP', 'USD')
 
@@ -95,13 +96,17 @@ Diseño relacional estructurado. La seguridad se gestiona mediante **Políticas 
 * `user_id` (UUID, FK -> `auth.users.id`)
 * `name` (String)
 * `type` (Enum: INCOME, EXPENSE)
-* `color` (String)
+* `icon` (String, nombre del ícono de lucide-react)
+* `color` (String, HEX)
+* `deleted_at` (Timestamp, nullable — soft delete)
 
 
 * **`transactions`**
 * `id` (UUID, PK)
 * `user_id` (UUID, FK -> `auth.users.id`)
-* `account_id` (UUID, FK)
+* `account_id` (UUID, FK, nullable)
+* `from_account_id` (UUID, FK, nullable — para transferencias)
+* `to_account_id` (UUID, FK, nullable — para transferencias)
 * `category_id` (UUID, FK, nullable para transferencias)
 * `type` (Enum: INCOME, EXPENSE, TRANSFER)
 * `amount` (Decimal)
@@ -142,8 +147,9 @@ finapp
 │   │   │       └── page.tsx
 │   │   ├── (dashboard)/        # Rutas protegidas por el middleware
 │   │   │   ├── page.tsx        # Dashboard (Métricas y Gráficas)
-│   │   │   ├── transactions/   # Gestión de transacciones
 │   │   │   ├── accounts/       # Gestión de cuentas bancarias
+│   │   │   ├── categories/     # Gestión de categorías (Módulo 2)
+│   │   │   ├── transactions/   # Gestión de transacciones
 │   │   │   └── subscriptions/  # Seguimiento de suscripciones
 │   │   ├── api/                # Enrutadores de API para callbacks de OAuth (Supabase)
 │   │   │   └── auth/           
@@ -154,19 +160,33 @@ finapp
 │   │
 │   ├── components/             # Componentes de UI reutilizables
 │   │   ├── ui/                 # Botones, inputs, modales base (shadcn/ui)
-│   │   ├── forms/              # Formularios de negocio (TransactionForm, AccountForm)
+│   │   │   ├── ColorPicker.tsx
+│   │   │   └── IconPicker.tsx
+│   │   ├── forms/              # Formularios de negocio
+│   │   │   ├── AccountForm.tsx
+│   │   │   └── CategoryForm.tsx
+│   │   ├── categories/         # Componentes del Módulo 2
+│   │   │   ├── CategoryCard.tsx
+│   │   │   ├── CategorySelect.tsx
+│   │   │   └── DeleteCategoryDialog.tsx
 │   │   └── auth/               # Botón de Login de Google, componente de protección visual
 │   │
 │   ├── core/                   # Capa lógica del negocio y acceso a datos
 │   │   ├── models/             # Esquemas de validación (Zod) y tipos de TypeScript
-│   │   │   ├── transaction.ts
-│   │   │   └── account.ts
+│   │   │   ├── account.ts
+│   │   │   ├── category.ts
+│   │   │   └── profile.ts
 │   │   ├── services/           # Reglas de negocio y orquestación
-│   │   │   ├── transaction.service.ts
-│   │   │   └── account.service.ts
+│   │   │   ├── account.service.ts
+│   │   │   ├── auth.client.ts
+│   │   │   ├── auth.service.ts
+│   │   │   └── category.service.ts
 │   │   ├── db/                 # Conectividad y consultas de base de datos
-│   │   │   ├── supabase.ts     # Inicialización del cliente de Supabase (Browser/Server)
+│   │   │   ├── supabase.ts     # Cliente de Supabase para navegador
+│   │   │   ├── supabase.server.ts # Cliente de Supabase para Server Components/Actions
 │   │   │   └── queries/        # Funciones que ejecutan consultas SQL específicas
+│   │   │       ├── account.queries.ts
+│   │   │       └── category.queries.ts
 │   │   └── utils/              # Funciones auxiliares puras (formateadores, cálculo de tasas)
 │   │       └── currency.ts
 │   │

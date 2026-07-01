@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { href: "/dashboard", label: "Inicio" },
   { href: "/accounts", label: "Cuentas" },
+  { href: "/categories", label: "Categorías" },
 ];
 
 export function NavBar() {

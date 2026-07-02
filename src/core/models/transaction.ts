@@ -13,6 +13,7 @@ export const TransactionSchema = z.object({
   from_account_id: z.string().uuid().nullable(),
   to_account_id: z.string().uuid().nullable(),
   category_id: z.string().uuid().nullable(),
+  subscription_id: z.string().uuid().nullable(), // NUEVO
   type: TransactionTypeSchema,
   amount: z.number(),
   currency: CurrencySchema,
@@ -155,6 +156,7 @@ export const TransactionFiltersSchema = z.object({
   to_date: z.string().optional(),
   account_id: z.string().uuid().optional(),
   category_id: z.string().uuid().optional(),
+  subscription_id: z.string().uuid().optional(), // NUEVO
   page: z.coerce.number().int().positive().default(1),
   page_size: z.coerce.number().int().positive().max(100).default(20),
 });

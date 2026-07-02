@@ -20,6 +20,7 @@ export async function selectTransactionsPaginated(
     p_to_date: filters.to_date || null,
     p_account_id: filters.account_id ?? null,
     p_category_id: filters.category_id ?? null,
+    p_subscription_id: filters.subscription_id ?? null, // NUEVO
   });
   if (error) throw error;
   const rows = (data ?? []) as TransactionWithDetails[];

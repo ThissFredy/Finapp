@@ -67,6 +67,8 @@ Visualización de la salud financiera.
 * **HU-5.1:** Como usuario, quiero ver un gráfico de barras comparando mis Ingresos vs Gastos del mes actual.
 * **HU-5.2:** Como usuario, quiero un gráfico circular (Pie chart) que desglose mis gastos por categoría para identificar fugas de capital.
 * **HU-5.3:** Como usuario, quiero un resumen de mi patrimonio neto actual distribuido por cuentas.
+* **HU-5.4:** Como usuario, quiero ver mis suscripciones activas con la próxima fecha de cobro desde el dashboard.
+* **HU-5.5:** Como usuario, quiero ver las últimas transacciones registradas desde el dashboard.
 
 ---
 
@@ -74,59 +76,139 @@ Visualización de la salud financiera.
 
 Diseño relacional estructurado. La seguridad se gestiona mediante **Políticas RLS (Row Level Security)** en Supabase, vinculando cada registro al `auth.uid()` provisto por el login de Google.
 
-* **`users`** (Esquema nativo `auth.users` de Supabase, poblador por el flujo de Google)
-* `id` (UUID, PK)
-* `email` (String)
-* `raw_user_meta_data->avatar_url` (String, foto de perfil de Google)
-* `raw_user_meta_data->full_name` (String, nombre completo de Google)
+### Enums definidos
 
+| Enum | Valores | Uso |
+|---|---|---|
+| `preferred_currency` | `COP`, `USD`, `EUR` | Moneda principal del perfil y de todas las entidades monetarias |
+| `account_type` | `DEBIT`, `CREDIT`, `CASH` | Tipo de cuenta financiera |
+| `account_status` | `ACTIVE`, `INACTIVE` | Estado de la cuenta |
+| `category_type` | `INCOME`, `EXPENSE` | Tipo de categoría |
+| `transaction_type` | `INCOME`, `EXPENSE`, `TRANSFER` | Tipo de transacción |
+| `billing_cycle` | `MONTHLY`, `YEARLY` | Frecuencia de cobro de suscripción |
+| `subscription_status` | `ACTIVE`, `PAUSED`, `CANCELLED` | Estado de la suscripción |
+
+### Tablas
+
+* **`auth.users`** (esquema nativo de Supabase Auth, poblado por el flujo de Google)
+  * `id` (UUID, PK)
+  * `email` (String)
+  * `raw_user_meta_data->avatar_url` (String, foto de perfil de Google)
+  * `raw_user_meta_data->full_name` (String, nombre completo de Google)
+
+* **`profiles`** (perfil extendido del usuario)
+  * `id` (UUID, PK, FK -> `auth.users.id` on delete cascade)
+  * `full_name` (String, nullable)
+  * `avatar_url` (String, nullable)
+  * `preferred_currency` (`preferred_currency`, default `COP`)
+  * `created_at` (Timestamp)
 
 * **`accounts`**
-* `id` (UUID, PK)
-* `user_id` (UUID, FK -> `auth.users.id`)
-* `name` (String)
-* `type` (Enum: DEBIT, CREDIT, CASH)
-* `status` (Enum: ACTIVE, INACTIVE)
-* `balance` (Decimal)
-* `currency` (String, ej. 'COP', 'USD')
-
+  * `id` (UUID, PK)
+  * `user_id` (UUID, FK -> `auth.users.id` on delete cascade)
+  * `name` (String, único por usuario)
+  * `type` (`account_type`)
+  * `status` (`account_status`, default `ACTIVE`)
+  * `balance` (Decimal 18,2, default 0)
+  * `currency` (`preferred_currency`, default `COP`)
+  * `created_at` (Timestamp)
+  * `updated_at` (Timestamp)
+  * *Constraint:* `chk_cash_non_negative` — las cuentas `CASH` no pueden tener saldo negativo
+  * *Índices:* `idx_accounts_user_id`, `idx_accounts_user_status`
 
 * **`categories`**
-* `id` (UUID, PK)
-* `user_id` (UUID, FK -> `auth.users.id`)
-* `name` (String)
-* `type` (Enum: INCOME, EXPENSE)
-* `icon` (String, nombre del ícono de lucide-react)
-* `color` (String, HEX)
-* `deleted_at` (Timestamp, nullable — soft delete)
-
+  * `id` (UUID, PK)
+  * `user_id` (UUID, FK -> `auth.users.id` on delete cascade)
+  * `name` (String)
+  * `type` (`category_type`)
+  * `icon` (String, NOT NULL, default `'tag'` — nombre de ícono de lucide-react)
+  * `color` (String HEX, default `'#6B7280'`)
+  * `deleted_at` (Timestamp, nullable — soft delete)
+  * `created_at` (Timestamp)
+  * `updated_at` (Timestamp)
+  * *Índice único parcial:* `categories_unique_name_per_type` sobre `(user_id, name, type) where deleted_at is null`
+  * *Índice compuesto:* `idx_categories_user_type_name` sobre `(user_id, type, name) where deleted_at is null`
 
 * **`transactions`**
-* `id` (UUID, PK)
-* `user_id` (UUID, FK -> `auth.users.id`)
-* `account_id` (UUID, FK, nullable)
-* `from_account_id` (UUID, FK, nullable — para transferencias)
-* `to_account_id` (UUID, FK, nullable — para transferencias)
-* `category_id` (UUID, FK, nullable para transferencias)
-* `type` (Enum: INCOME, EXPENSE, TRANSFER)
-* `amount` (Decimal)
-* `currency` (String)
-* `exchange_rate` (Decimal)
-* `date` (Timestamp)
-* `description` (Text)
-
+  * `id` (UUID, PK)
+  * `user_id` (UUID, FK -> `auth.users.id` on delete cascade)
+  * `account_id` (UUID, FK -> `accounts.id` on delete restrict, nullable)
+  * `from_account_id` (UUID, FK -> `accounts.id` on delete restrict, nullable — para transferencias)
+  * `to_account_id` (UUID, FK -> `accounts.id` on delete restrict, nullable — para transferencias)
+  * `category_id` (UUID, FK -> `categories.id` on delete set null, nullable)
+  * `subscription_id` (UUID, FK -> `subscriptions.id` on delete set null, nullable)
+  * `type` (`transaction_type`)
+  * `amount` (Decimal 18,2)
+  * `currency` (`preferred_currency`, default `COP`)
+  * `exchange_rate` (Decimal 18,6, default 1.0)
+  * `date` (Timestamp)
+  * `description` (Text, nullable)
+  * `created_at` (Timestamp)
+  * `updated_at` (Timestamp)
+  * *Índices:* `idx_transactions_user_id`, `idx_transactions_user_date`, `idx_transactions_account_id`, `idx_transactions_from_account`, `idx_transactions_to_account`, `idx_transactions_subscription_id`
 
 * **`subscriptions`**
-* `id` (UUID, PK)
-* `user_id` (UUID, FK -> `auth.users.id`)
-* `name` (String)
-* `amount` (Decimal)
-* `currency` (String)
-* `billing_cycle` (Enum: MONTHLY, YEARLY)
-* `next_billing_date` (Date)
-* `category_id` (UUID, FK)
+  * `id` (UUID, PK)
+  * `user_id` (UUID, FK -> `auth.users.id` on delete cascade)
+  * `name` (String)
+  * `amount` (Decimal 18,2)
+  * `currency` (`preferred_currency`, default `COP`)
+  * `billing_cycle` (`billing_cycle`, default `MONTHLY`)
+  * `next_billing_date` (Date)
+  * `category_id` (UUID, FK -> `categories.id` on delete set null, nullable)
+  * `account_id` (UUID, FK -> `accounts.id` on delete set null, nullable)
+  * `status` (`subscription_status`, default `ACTIVE`)
+  * `deleted_at` (Timestamp, nullable — soft delete)
+  * `created_at` (Timestamp)
+  * `updated_at` (Timestamp)
+  * *Índice único parcial:* `subscriptions_unique_name_per_user` sobre `(user_id, name) where deleted_at is null`
+  * *Índice compuesto parcial:* `idx_subscriptions_user_status_billing` sobre `(user_id, status, next_billing_date) where deleted_at is null`
 
+* **`exchange_rates`** (tasas de cambio para conversión multimoneda)
+  * `from_currency` (`preferred_currency`)
+  * `to_currency` (`preferred_currency`)
+  * `rate` (Decimal 18,6)
+  * `fetched_at` (Timestamp)
+  * *PK:* `(from_currency, to_currency)`
 
+* **`user_balances`** (caché del patrimonio neto consolidado)
+  * `user_id` (UUID, PK, FK -> `auth.users.id` on delete cascade)
+  * `total_balance` (Decimal 18,2, default 0)
+  * `currency` (`preferred_currency`, default `COP`)
+  * `updated_at` (Timestamp)
+
+### Seguridad (RLS)
+
+Todas las tablas de usuario (`profiles`, `accounts`, `categories`, `transactions`, `subscriptions`, `exchange_rates`, `user_balances`) tienen RLS habilitado. Las políticas principales son:
+
+* **Owner-only:** `profiles`, `accounts`, `categories`, `transactions`, `subscriptions`, `user_balances` — el usuario solo ve y muta sus propios registros (`user_id = auth.uid()`).
+* **Authenticated read-only:** `exchange_rates` — cualquier usuario autenticado puede leer las tasas.
+
+### Triggers y funciones principales
+
+| Función / Trigger | Propósito |
+|---|---|
+| `handle_new_user()` + `on_auth_user_created` | Crea automáticamente el perfil en `public.profiles` al registrarse con Google |
+| `update_updated_at()` | Actualiza `updated_at` en cuentas, categorías, transacciones y suscripciones |
+| `recalculate_user_balance()` | Recalcula y guarda el patrimonio neto consolidado en `user_balances` tras cambios en `accounts` |
+| `apply_transaction_balance()` | Mantiene sincronizados los saldos de `accounts` ante INSERT/UPDATE/DELETE en `transactions` |
+
+### Funciones RPC (Supabase)
+
+Funciones expuestas a usuarios autenticados para consultas complejas:
+
+* `get_accounts_with_meta()` — cuentas con flag `has_transactions`
+* `get_categories_with_meta()` — categorías con flag `has_transactions`
+* `get_subscriptions_with_meta()` — suscripciones con metadatos de cuenta/categoría y estado de pago del ciclo
+* `get_upcoming_subscription_payments(p_year, p_month)` — pagos próximos del mes
+* `get_transactions_paginated(...)` — historial paginado con filtros y joins
+* `reassign_category_transactions(p_source_category_id, p_target_category_id)` — reasigna transacciones y elimina categoría origen
+* `register_subscription_payment(...)` — registra pago de suscripción, crea transacción y avanza fecha de cobro
+* `get_dashboard_monthly_summary()` — totales de ingresos/gastos del mes
+* `get_dashboard_expenses_by_category()` — gastos del mes por categoría
+* `get_dashboard_net_worth_by_account()` — patrimonio neto por cuenta
+* `get_dashboard_subscriptions()` — suscripciones para el dashboard
+* `get_dashboard_recent_transactions(p_limit)` — últimas transacciones
 
 ---
 

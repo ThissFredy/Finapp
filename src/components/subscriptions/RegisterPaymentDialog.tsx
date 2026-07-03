@@ -59,6 +59,7 @@ export function RegisterPaymentDialog({
 
   // Pre-llenar campos cuando se abre el diálogo
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     if (subscription) {
       setAmount(String(subscription.amount));
       setDescription(`Suscripción: ${subscription.name}`);
@@ -67,6 +68,7 @@ export function RegisterPaymentDialog({
       setDate(new Date().toISOString().split("T")[0]);
       setErrors({});
     }
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, [subscription]);
 
   // Moneda de la cuenta seleccionada
@@ -81,16 +83,20 @@ export function RegisterPaymentDialog({
 
   // Auto-llenar tasa desde exchange_rates
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     if (showExchangeRate && accountCurrency) {
       const found = exchangeRates.find(
         (r) =>
           r.from_currency === subCurrency &&
           r.to_currency === accountCurrency
       );
-      if (found) setExchangeRate(String(found.rate));
+      if (found) {
+        setExchangeRate(String(found.rate));
+      }
     } else if (!showExchangeRate) {
       setExchangeRate("1");
     }
+    /* eslint-enable react-hooks/set-state-in-effect */
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountCurrency, showExchangeRate, subCurrency]);
 

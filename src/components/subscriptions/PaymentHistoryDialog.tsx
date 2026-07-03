@@ -49,12 +49,14 @@ export function PaymentHistoryDialog({
   );
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     if (subscription) {
       setItems([]);
       setTotalCount(0);
       setPage(1);
       load(subscription.id, 1);
     }
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, [subscription, load]);
 
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));

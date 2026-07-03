@@ -92,7 +92,7 @@ export function SubscriptionsClient({
             {subscriptions.length === 0 ? (
               <div className="py-12 text-center text-sm text-muted-foreground">
                 No tienes suscripciones registradas. Crea una con el botón
-                "Nueva suscripción".
+                &quot;Nueva suscripción&quot;.
               </div>
             ) : (
               subscriptions.map((s) => (

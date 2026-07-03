@@ -76,13 +76,16 @@ export function UpcomingPaymentsList({
   }
 
   // Convertir monto a moneda preferida
-  function convert(amount: number, from: string): number {
-    if (from === preferredCurrency) return amount;
-    const rate = exchangeRates.find(
-      (r) => r.from_currency === from && r.to_currency === preferredCurrency
-    )?.rate;
-    return rate ? amount * rate : amount;
-  }
+  const convert = useCallback(
+    (amount: number, from: string): number => {
+      if (from === preferredCurrency) return amount;
+      const rate = exchangeRates.find(
+        (r) => r.from_currency === from && r.to_currency === preferredCurrency
+      )?.rate;
+      return rate ? amount * rate : amount;
+    },
+    [exchangeRates, preferredCurrency]
+  );
 
   // Resumen del mes
   const summary = useMemo(() => {
@@ -97,7 +100,7 @@ export function UpcomingPaymentsList({
       paidCount,
       pendingCount: payments.length - paidCount,
     };
-  }, [payments, exchangeRates, preferredCurrency]);
+  }, [payments, convert]);
 
   // Agrupar por fecha
   const grouped = useMemo(() => {

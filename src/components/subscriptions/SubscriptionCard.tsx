@@ -38,7 +38,6 @@ export function SubscriptionCard({
     account_name,
     account_status,
     category_name,
-    category_icon,
     category_color,
     category_deleted_at,
     status,

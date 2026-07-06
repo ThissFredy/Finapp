@@ -1,12 +1,11 @@
+import * as React from "react";
 import Link from "next/link";
 import {
   ArrowUpRight,
   ArrowDownRight,
   ArrowLeftRight,
-  Tag,
-  type LucideIcon,
 } from "lucide-react";
-import * as Icons from "lucide-react";
+import { getIconByName } from "@/lib/icons";
 import type { RecentTransactionItem } from "@/core/models/dashboard";
 import { formatCurrency } from "@/core/utils/currency";
 
@@ -35,12 +34,6 @@ const transactionTypeConfig = {
   },
 } as const;
 
-function resolveCategoryIcon(iconName: string | null): LucideIcon {
-  if (!iconName) return Tag;
-  const icon = (Icons as unknown as Record<string, LucideIcon>)[iconName];
-  return icon ?? Tag;
-}
-
 export function RecentTransactionsWidget({
   transactions,
 }: RecentTransactionsWidgetProps) {
@@ -67,7 +60,6 @@ export function RecentTransactionsWidget({
           {transactions.map((tx) => {
             const config = transactionTypeConfig[tx.type];
             const TypeIcon = config.icon;
-            const CategoryIcon = resolveCategoryIcon(tx.category_icon);
 
             return (
               <div
@@ -104,10 +96,10 @@ export function RecentTransactionsWidget({
                   </p>
                   {tx.category_name && (
                     <div className="flex items-center justify-end gap-1">
-                      <CategoryIcon
-                        className="h-3 w-3"
-                        style={{ color: tx.category_color || undefined }}
-                      />
+                      {React.createElement(getIconByName(tx.category_icon), {
+                        className: "h-3 w-3",
+                        style: { color: tx.category_color || undefined },
+                      })}
                       <span className="text-xs text-muted-foreground">
                         {tx.category_name}
                       </span>

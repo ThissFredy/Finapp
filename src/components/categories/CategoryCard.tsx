@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { MoreVertical, Pencil, Trash2, type LucideIcon } from "lucide-react";
+import { MoreVertical, Pencil, Trash2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,22 +11,13 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import * as Icons from "lucide-react";
+import { getIconByName } from "@/lib/icons";
 import type { CategoryWithMeta } from "@/core/models/category";
 
 interface CategoryCardProps {
   category: CategoryWithMeta;
   onEdit: (category: CategoryWithMeta) => void;
   onDelete: (category: CategoryWithMeta) => void;
-}
-
-function getIconComponent(name: string): LucideIcon {
-  const pascalName =
-    name.charAt(0).toUpperCase() +
-    name.slice(1).replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
-  return (
-    ((Icons as unknown) as Record<string, LucideIcon>)[pascalName] ?? Icons.Tag
-  );
 }
 
 export function CategoryCard({
@@ -40,7 +31,7 @@ export function CategoryCard({
         className="flex h-10 w-10 items-center justify-center rounded-full"
         style={{ backgroundColor: category.color + "20" }}
       >
-        {React.createElement(getIconComponent(category.icon), {
+        {React.createElement(getIconByName(category.icon), {
           className: "h-5 w-5",
           style: { color: category.color },
         })}

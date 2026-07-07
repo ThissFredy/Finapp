@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { ArrowLeftRight, Loader2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -152,6 +153,9 @@ export function TransactionForm({
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
+          <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-secondary sm:mx-0">
+            <ArrowLeftRight className="h-5 w-5 text-muted-foreground" />
+          </div>
           <DialogTitle>
             {isEdit ? "Editar transacción" : "Nueva transacción"}
           </DialogTitle>
@@ -366,11 +370,16 @@ export function TransactionForm({
               Cancelar
             </Button>
             <Button type="submit" disabled={pending}>
-              {pending
-                ? "Guardando..."
-                : isEdit
-                  ? "Guardar cambios"
-                  : "Registrar"}
+              {pending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Guardando...
+                </>
+              ) : isEdit ? (
+                "Guardar cambios"
+              ) : (
+                "Registrar"
+              )}
             </Button>
           </DialogFooter>
         </form>

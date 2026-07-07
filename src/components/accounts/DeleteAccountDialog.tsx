@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AlertTriangle, Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -44,6 +45,9 @@ export function DeleteAccountDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
+          <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10 sm:mx-0">
+            <AlertTriangle className="h-6 w-6 text-destructive" />
+          </div>
           <DialogTitle>Eliminar cuenta</DialogTitle>
           <DialogDescription>
             ¿Estás seguro de que quieres eliminar &quot;{account.name}&quot;? Esta
@@ -66,7 +70,14 @@ export function DeleteAccountDialog({
             onClick={handleDelete}
             disabled={status === "deleting"}
           >
-            {status === "deleting" ? "Eliminando..." : "Eliminar"}
+            {status === "deleting" ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Eliminando...
+              </>
+            ) : (
+              "Eliminar"
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

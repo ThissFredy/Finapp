@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { Plus, Tags, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import { CategoryCard } from "@/components/categories/CategoryCard";
 import { CategoryForm } from "@/components/forms/CategoryForm";
 import { DeleteCategoryDialog } from "@/components/categories/DeleteCategoryDialog";
+import { EmptyState } from "@/components/ui/empty-state";
+import { FadeIn, AnimatedListItem } from "@/components/ui/motion";
 import type { CategoryWithMeta } from "@/core/models/category";
 
 interface CategoriesClientProps {
@@ -49,59 +51,86 @@ export function CategoriesClient({
     : [];
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Categorías</h1>
-        <Button onClick={handleNew}>
-          <Plus className="mr-2 h-4 w-4" />
-          Nueva categoría
-        </Button>
-      </div>
+    <div className="space-y-8">
+      <FadeIn direction="up" delay={1}>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Categorías</h1>
+            <p className="text-sm text-muted-foreground">
+              Clasifica tus ingresos y gastos para entender mejor tu dinero.
+            </p>
+          </div>
+          <Button onClick={handleNew}>
+            <Plus className="mr-2 h-4 w-4" />
+            Nueva categoría
+          </Button>
+        </div>
+      </FadeIn>
 
-      <section className="space-y-3">
-        <h2 className="text-lg font-semibold text-emerald-600">Ingresos</h2>
+      <section className="space-y-4">
+        <FadeIn direction="up" delay={2}>
+          <div className="flex items-center gap-2">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/10">
+              <Tag className="h-4 w-4 text-emerald-600" />
+            </div>
+            <h2 className="text-lg font-semibold text-emerald-600">Ingresos</h2>
+          </div>
+        </FadeIn>
         {income.length === 0 ? (
-          <p className="text-sm text-muted-foreground py-4">
-            No hay categorías de ingreso. Crea una para empezar a clasificar tus
-            ingresos.
-          </p>
+          <EmptyState
+            icon={Tags}
+            title="Sin categorías de ingreso"
+            description="Crea una categoría para empezar a clasificar tus ingresos."
+            className="py-10"
+          />
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {income.map((cat) => (
-              <CategoryCard
-                key={cat.id}
-                category={cat}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-              />
+            {income.map((cat, index) => (
+              <AnimatedListItem key={cat.id} index={index}>
+                <CategoryCard
+                  category={cat}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                />
+              </AnimatedListItem>
             ))}
           </div>
         )}
       </section>
 
-      <section className="space-y-3">
-        <h2 className="text-lg font-semibold text-rose-600">Gastos</h2>
+      <section className="space-y-4">
+        <FadeIn direction="up" delay={3}>
+          <div className="flex items-center gap-2">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-rose-500/10">
+              <Tag className="h-4 w-4 text-rose-600" />
+            </div>
+            <h2 className="text-lg font-semibold text-rose-600">Gastos</h2>
+          </div>
+        </FadeIn>
         {expense.length === 0 ? (
-          <p className="text-sm text-muted-foreground py-4">
-            No hay categorías de gasto. Crea una para empezar a clasificar tus
-            gastos.
-          </p>
+          <EmptyState
+            icon={Tags}
+            title="Sin categorías de gasto"
+            description="Crea una categoría para empezar a clasificar tus gastos."
+            className="py-10"
+          />
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {expense.map((cat) => (
-              <CategoryCard
-                key={cat.id}
-                category={cat}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-              />
+            {expense.map((cat, index) => (
+              <AnimatedListItem key={cat.id} index={index}>
+                <CategoryCard
+                  category={cat}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                />
+              </AnimatedListItem>
             ))}
           </div>
         )}
       </section>
 
       {deleted.length > 0 && (
-        <section className="space-y-3 opacity-60">
+        <section className="space-y-4 opacity-60">
           <h2 className="text-lg font-semibold text-muted-foreground">
             Categorías eliminadas (en historial)
           </h2>

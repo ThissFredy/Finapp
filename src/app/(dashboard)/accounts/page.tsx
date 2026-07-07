@@ -1,9 +1,11 @@
-import { Banknote } from "lucide-react";
+import { Banknote, Plus } from "lucide-react";
 
 import { AccountForm } from "@/components/forms/AccountForm";
 import { AccountList } from "@/components/accounts/AccountList";
 import { TotalBalanceCard } from "@/components/accounts/TotalBalanceCard";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { FadeIn } from "@/components/ui/motion";
 import {
   getAccountsWithMeta,
   getUserBalance,
@@ -18,27 +20,43 @@ export default async function AccountsPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       {/* Balance total */}
-      <TotalBalanceCard balance={balance} />
+      <FadeIn direction="up" delay={1}>
+        <TotalBalanceCard balance={balance} />
+      </FadeIn>
 
       {/* Header + botón crear */}
-      <div className="mt-8 flex items-center justify-between">
-        <h2 className="text-2xl font-bold tracking-tight">Mis Cuentas</h2>
-        <AccountForm mode="create" />
-      </div>
+      <FadeIn direction="up" delay={2}>
+        <div className="mt-8 flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight">Mis Cuentas</h2>
+            <p className="text-sm text-muted-foreground">
+              Gestiona tus cuentas bancarias, tarjetas y efectivo.
+            </p>
+          </div>
+          <AccountForm mode="create" />
+        </div>
+      </FadeIn>
 
       {/* Listado o estado vacío */}
       {accounts.length === 0 ? (
-        <div className="mt-8 flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16">
-          <Banknote className="h-12 w-12 text-muted-foreground" />
-          <h3 className="mt-4 text-lg font-semibold">No tienes cuentas aún</h3>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Crea tu primera cuenta para empezar a gestionar tus finanzas.
-          </p>
-          <AccountForm
-            mode="create"
-            trigger={<Button className="mt-4">Crear primera cuenta</Button>}
+        <FadeIn direction="up" delay={3} className="mt-8">
+          <EmptyState
+            icon={Banknote}
+            title="No tienes cuentas aún"
+            description="Crea tu primera cuenta para empezar a gestionar tus finanzas."
+            action={
+              <AccountForm
+                mode="create"
+                trigger={
+                  <Button>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Crear primera cuenta
+                  </Button>
+                }
+              />
+            }
           />
-        </div>
+        </FadeIn>
       ) : (
         <AccountList accounts={accounts} />
       )}

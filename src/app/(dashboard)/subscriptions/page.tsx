@@ -4,6 +4,7 @@ import { selectActiveCategoriesByType } from "@/core/db/queries/category.queries
 import { selectAllExchangeRates } from "@/core/db/queries/transaction.queries";
 import { selectUserBalance } from "@/core/db/queries/account.queries";
 import { SubscriptionsClient } from "./SubscriptionsClient";
+import { FadeIn } from "@/components/ui/motion";
 
 export default async function SubscriptionsPage() {
   const now = new Date();
@@ -28,16 +29,18 @@ export default async function SubscriptionsPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <SubscriptionsClient
-        subscriptions={subscriptions}
-        upcomingPayments={upcomingPayments}
-        initialYear={year}
-        initialMonth={month}
-        accounts={accounts}
-        expenseCategories={expenseCategories}
-        exchangeRates={exchangeRates}
-        preferredCurrency={userBalance?.currency ?? "COP"}
-      />
+      <FadeIn direction="up" delay={1}>
+        <SubscriptionsClient
+          subscriptions={subscriptions}
+          upcomingPayments={upcomingPayments}
+          initialYear={year}
+          initialMonth={month}
+          accounts={accounts}
+          expenseCategories={expenseCategories}
+          exchangeRates={exchangeRates}
+          preferredCurrency={userBalance?.currency ?? "COP"}
+        />
+      </FadeIn>
     </div>
   );
 }

@@ -2,11 +2,12 @@
 
 import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, Loader2 } from "lucide-react";
 import { TransactionForm } from "@/components/forms/TransactionForm";
 import { TransactionList } from "@/components/transactions/TransactionList";
 import { TransactionFilters } from "@/components/transactions/TransactionFilters";
 import { DeleteTransactionDialog } from "@/components/transactions/DeleteTransactionDialog";
+import { FadeIn } from "@/components/ui/motion";
 import { listTransactionsAction } from "@/app/(dashboard)/transactions/actions";
 import type { Account } from "@/core/models/account";
 import type { Category } from "@/core/models/category";
@@ -98,28 +99,38 @@ export function TransactionsClient({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Transacciones</h1>
-        <Button onClick={handleNew}>
-          <Plus className="mr-2 h-4 w-4" />
-          Nueva transacción
-        </Button>
-      </div>
+      <FadeIn direction="up" delay={1}>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Transacciones</h1>
+            <p className="text-sm text-muted-foreground">
+              Revisa y gestiona todos tus movimientos.
+            </p>
+          </div>
+          <Button onClick={handleNew}>
+            <Plus className="mr-2 h-4 w-4" />
+            Nueva transacción
+          </Button>
+        </div>
+      </FadeIn>
 
-      <TransactionFilters
-        accounts={accounts}
-        categories={allCategories}
-        from_date={filters.from_date}
-        to_date={filters.to_date}
-        account_id={filters.account_id}
-        category_id={filters.category_id}
-        onChange={handleFiltersChange}
-      />
+      <FadeIn direction="up" delay={2}>
+        <TransactionFilters
+          accounts={accounts}
+          categories={allCategories}
+          from_date={filters.from_date}
+          to_date={filters.to_date}
+          account_id={filters.account_id}
+          category_id={filters.category_id}
+          onChange={handleFiltersChange}
+        />
+      </FadeIn>
 
       {loading ? (
-        <p className="py-12 text-center text-sm text-muted-foreground">
-          Cargando...
-        </p>
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-border bg-card/50 py-16 text-sm text-muted-foreground">
+          <Loader2 className="mb-3 h-6 w-6 animate-spin" />
+          Cargando transacciones...
+        </div>
       ) : (
         <TransactionList
           items={items}

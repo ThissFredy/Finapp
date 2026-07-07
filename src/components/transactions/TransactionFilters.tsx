@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { X } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -139,6 +140,7 @@ export function TransactionFilters({
               })
             }
           >
+            <X className="mr-1.5 h-3.5 w-3.5" />
             Limpiar filtros
           </Button>
         </div>

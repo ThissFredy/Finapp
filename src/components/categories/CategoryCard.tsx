@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { getIconByName } from "@/lib/icons";
 import type { CategoryWithMeta } from "@/core/models/category";
+import { cn } from "@/lib/utils";
 
 interface CategoryCardProps {
   category: CategoryWithMeta;
@@ -26,9 +27,9 @@ export function CategoryCard({
   onDelete,
 }: CategoryCardProps) {
   return (
-    <Card className="flex items-center gap-3 p-4">
+    <Card className="group flex items-center gap-3 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
       <div
-        className="flex h-10 w-10 items-center justify-center rounded-full"
+        className="flex h-11 w-11 items-center justify-center rounded-full transition-transform duration-200 group-hover:scale-105"
         style={{ backgroundColor: category.color + "20" }}
       >
         {React.createElement(getIconByName(category.icon), {
@@ -37,8 +38,8 @@ export function CategoryCard({
         })}
       </div>
 
-      <div className="flex-1">
-        <p className="font-medium">{category.name}</p>
+      <div className="flex-1 min-w-0">
+        <p className="truncate font-medium">{category.name}</p>
         <p className="text-xs text-muted-foreground">
           {category.has_transactions
             ? "Tiene transacciones"
@@ -46,13 +47,26 @@ export function CategoryCard({
         </p>
       </div>
 
-      <Badge variant={category.type === "INCOME" ? "default" : "secondary"}>
+      <Badge
+        variant={category.type === "INCOME" ? "default" : "secondary"}
+        className={cn(
+          "shrink-0",
+          category.type === "INCOME" &&
+            "bg-emerald-100 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-500/15 dark:text-emerald-400",
+          category.type === "EXPENSE" &&
+            "bg-rose-100 text-rose-700 hover:bg-rose-100 dark:bg-rose-500/15 dark:text-rose-400"
+        )}
+      >
         {category.type === "INCOME" ? "Ingreso" : "Gasto"}
       </Badge>
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 shrink-0 opacity-60 transition-opacity group-hover:opacity-100"
+          >
             <MoreVertical className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>

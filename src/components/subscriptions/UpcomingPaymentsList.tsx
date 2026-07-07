@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, CheckCircle2, CalendarClock, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/core/utils/currency";
+import { getIconByName } from "@/lib/icons";
+import { cn } from "@/lib/utils";
 import { listUpcomingPaymentsAction } from "@/app/(dashboard)/subscriptions/actions";
 import type { Currency } from "@/core/models/account";
 import type { SubscriptionWithMeta } from "@/core/models/subscription";
@@ -75,7 +77,6 @@ export function UpcomingPaymentsList({
     refresh(y, m);
   }
 
-  // Convertir monto a moneda preferida
   const convert = useCallback(
     (amount: number, from: string): number => {
       if (from === preferredCurrency) return amount;
@@ -87,7 +88,6 @@ export function UpcomingPaymentsList({
     [exchangeRates, preferredCurrency]
   );
 
-  // Resumen del mes
   const summary = useMemo(() => {
     const total = payments.reduce(
       (sum, s) => sum + convert(s.amount, s.currency),
@@ -102,7 +102,6 @@ export function UpcomingPaymentsList({
     };
   }, [payments, convert]);
 
-  // Agrupar por fecha
   const grouped = useMemo(() => {
     const map = new Map<string, SubscriptionWithMeta[]>();
     for (const p of payments) {
@@ -116,7 +115,7 @@ export function UpcomingPaymentsList({
   }, [payments]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* Navegación de mes */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -134,33 +133,27 @@ export function UpcomingPaymentsList({
 
       {/* Resumen */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="rounded-lg border bg-card p-3 text-center">
-          <p className="text-xs text-muted-foreground">Total del mes</p>
-          <p className="text-lg font-bold">
-            {formatCurrency(summary.total, preferredCurrency)}
-          </p>
-        </div>
-        <div className="rounded-lg border bg-card p-3 text-center">
-          <p className="text-xs text-muted-foreground">Pendientes</p>
-          <p className="text-lg font-bold text-amber-600">
-            {summary.pendingCount}
-          </p>
-        </div>
-        <div className="rounded-lg border bg-card p-3 text-center">
-          <p className="text-xs text-muted-foreground">Pagados</p>
-          <p className="text-lg font-bold text-emerald-600">
-            {summary.paidCount}
-          </p>
-        </div>
+        <SummaryPill label="Total del mes" value={formatCurrency(summary.total, preferredCurrency)} />
+        <SummaryPill
+          label="Pendientes"
+          value={String(summary.pendingCount)}
+          valueClassName="text-amber-600"
+        />
+        <SummaryPill
+          label="Pagados"
+          value={String(summary.paidCount)}
+          valueClassName="text-emerald-600"
+        />
       </div>
 
       {/* Lista agrupada por fecha */}
       {loading ? (
-        <p className="py-12 text-center text-sm text-muted-foreground">
-          Cargando...
-        </p>
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-border bg-card/50 py-16 text-sm text-muted-foreground">
+          <Loader2 className="mb-3 h-6 w-6 animate-spin" />
+          Cargando pagos...
+        </div>
       ) : grouped.length === 0 ? (
-        <div className="py-12 text-center text-sm text-muted-foreground">
+        <div className="rounded-2xl border border-dashed border-border bg-card/50 py-12 text-center text-sm text-muted-foreground">
           No hay suscripciones con corte en este mes.
         </div>
       ) : (
@@ -175,61 +168,86 @@ export function UpcomingPaymentsList({
                 })}
               </p>
               <div className="space-y-2">
-                {items.map((s) => (
-                  <div
-                    key={s.id}
-                    className="flex items-center justify-between gap-3 rounded-lg border bg-card px-4 py-3"
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div
-                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
-                        style={{
-                          backgroundColor: s.category_color
-                            ? `${s.category_color}22`
-                            : undefined,
-                        }}
-                      >
-                        <span className="text-xs font-medium">
-                          {s.category_icon?.[0]?.toUpperCase() ?? "?"}
+                {items.map((s) => {
+                  const CategoryIcon = getIconByName(s.category_icon);
+                  return (
+                    <div
+                      key={s.id}
+                      className="group flex items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3 transition-all duration-200 hover:bg-muted/40"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div
+                          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
+                          style={{
+                            backgroundColor: s.category_color
+                              ? `${s.category_color}22`
+                              : undefined,
+                          }}
+                        >
+                          {s.category_color ? (
+                            <CategoryIcon
+                              className="h-4 w-4"
+                              style={{ color: s.category_color }}
+                            />
+                          ) : (
+                            <CalendarClock className="h-4 w-4 text-muted-foreground" />
+                          )}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-medium">
+                            {s.name}
+                          </p>
+                          <p className="truncate text-xs text-muted-foreground">
+                            {s.category_name} · {s.account_name ?? "Sin cuenta"}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-semibold tabular-nums">
+                          {formatCurrency(s.amount, s.currency as Currency)}
                         </span>
-                      </div>
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-medium">
-                          {s.name}
-                        </p>
-                        <p className="truncate text-xs text-muted-foreground">
-                          {s.category_name} · {s.account_name ?? "Sin cuenta"}
-                        </p>
+                        {s.is_paid_this_cycle ? (
+                          <Badge
+                            variant="secondary"
+                            className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-500/15 dark:text-emerald-400"
+                          >
+                            <CheckCircle2 className="mr-1 h-3 w-3" />
+                            Pagado
+                          </Badge>
+                        ) : (
+                          <Button
+                            size="sm"
+                            onClick={() => onPay(s)}
+                          >
+                            Registrar pago
+                          </Button>
+                        )}
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold">
-                        {formatCurrency(s.amount, s.currency as Currency)}
-                      </span>
-                      {s.is_paid_this_cycle ? (
-                        <Badge
-                          variant="secondary"
-                          className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
-                        >
-                          <CheckCircle2 className="mr-1 h-3 w-3" />
-                          Pagado
-                        </Badge>
-                      ) : (
-                        <Button
-                          size="sm"
-                          onClick={() => onPay(s)}
-                        >
-                          Registrar pago
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+function SummaryPill({
+  label,
+  value,
+  valueClassName,
+}: {
+  label: string;
+  value: string;
+  valueClassName?: string;
+}) {
+  return (
+    <div className="rounded-xl border border-border bg-card p-3 text-center">
+      <p className="text-xs text-muted-foreground">{label}</p>
+      <p className={cn("text-lg font-bold", valueClassName)}>{value}</p>
     </div>
   );
 }

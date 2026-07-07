@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { Tags } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -67,6 +68,9 @@ export function CategoryForm({ open, onClose, category }: CategoryFormProps) {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent key={category?.id ?? "new"} className="sm:max-w-[480px]">
         <DialogHeader>
+          <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-secondary sm:mx-0">
+            <Tags className="h-5 w-5 text-muted-foreground" />
+          </div>
           <DialogTitle>
             {isEditing ? "Editar categoría" : "Nueva categoría"}
           </DialogTitle>

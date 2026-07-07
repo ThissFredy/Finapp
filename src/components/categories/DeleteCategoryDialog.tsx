@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { AlertTriangle } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -59,6 +60,9 @@ function DeleteForm({ category, availableTargets, onClose }: DeleteFormProps) {
   return (
     <>
       <DialogHeader>
+        <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10 sm:mx-0">
+          <AlertTriangle className="h-6 w-6 text-destructive" />
+        </div>
         <DialogTitle>Eliminar categoría</DialogTitle>
         <DialogDescription>
           {category.has_transactions

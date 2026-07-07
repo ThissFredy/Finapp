@@ -11,6 +11,8 @@ import {
 import type { ExpenseByCategoryItem } from "@/core/models/dashboard";
 import type { Currency } from "@/core/models/account";
 import { formatCurrency } from "@/core/utils/currency";
+import { AnimatedCard } from "@/components/ui/motion";
+import { PieChartIcon } from "lucide-react";
 
 interface ExpensesByCategoryChartProps {
   data: ExpenseByCategoryItem[];
@@ -33,13 +35,21 @@ export function ExpensesByCategoryChart({
   );
 
   return (
-    <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
-      <h2 className="text-lg font-semibold text-card-foreground">
-        Gastos por categoría
-      </h2>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Desglose del mes actual en {currency}
-      </p>
+    <AnimatedCard>
+      <div className="flex items-center gap-2">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary">
+          <PieChartIcon className="h-4 w-4 text-muted-foreground" />
+        </div>
+        <div>
+          <h2 className="text-lg font-semibold text-card-foreground">
+            Gastos por categoría
+          </h2>
+          <p className="text-xs text-muted-foreground">
+            Desglose del mes actual en {currency}
+          </p>
+        </div>
+      </div>
+
       <ChartContainer
         config={chartConfig}
         className="mx-auto mt-4 h-[280px] w-full"
@@ -69,6 +79,8 @@ export function ExpensesByCategoryChart({
               <Cell
                 key={item.category_id}
                 fill={item.category_color || `var(--chart-${(index % 5) + 1})`}
+                stroke="var(--card)"
+                strokeWidth={2}
               />
             ))}
           </Pie>
@@ -78,6 +90,6 @@ export function ExpensesByCategoryChart({
           />
         </PieChart>
       </ChartContainer>
-    </div>
+    </AnimatedCard>
   );
 }

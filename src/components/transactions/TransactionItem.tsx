@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/core/utils/currency";
 import type { Currency } from "@/core/models/account";
 import type { TransactionWithDetails } from "@/core/models/transaction";
+import { cn } from "@/lib/utils";
 
 interface TransactionItemProps {
   transaction: TransactionWithDetails;
@@ -52,7 +53,13 @@ export function TransactionItem({
     ? "text-emerald-600"
     : isExpense
       ? "text-rose-600"
-      : "text-muted-foreground";
+      : "text-blue-600";
+
+  const bgClass = isIncome
+    ? "bg-emerald-500/10"
+    : isExpense
+      ? "bg-rose-500/10"
+      : "bg-blue-500/10";
 
   const sign = isIncome ? "+" : isExpense ? "-" : "";
   const accountLabel = isTransfer
@@ -73,15 +80,18 @@ export function TransactionItem({
       : "";
 
   return (
-    <div className="flex items-center justify-between gap-3 py-3 border-b last:border-0">
+    <div className="group flex items-center justify-between gap-3 rounded-xl px-3 py-3 transition-all duration-200 hover:bg-muted/60">
       <div className="flex items-center gap-3 min-w-0">
         <div
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
+          className={cn(
+            "flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-transform duration-200 group-hover:scale-105",
+            bgClass
+          )}
           style={{
-            backgroundColor: category_color ? `${category_color}22` : undefined,
+            backgroundColor: category_color && !isTransfer && !isIncome ? `${category_color}22` : undefined,
           }}
         >
-          <Icon className={`h-5 w-5 ${colorClass}`} />
+          <Icon className={cn("h-5 w-5", colorClass)} />
         </div>
         <div className="min-w-0">
           <p className="truncate text-sm font-medium">
@@ -93,27 +103,31 @@ export function TransactionItem({
           </p>
         </div>
       </div>
-      <div className="flex items-center gap-2">
-        <span className={`text-sm font-semibold ${colorClass}`}>
+      <div className="flex items-center gap-1">
+        <span className={cn("text-sm font-semibold tabular-nums", colorClass)}>
           {sign}
           {formattedAmount}
         </span>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8"
-          onClick={() => onEdit(transaction)}
-        >
-          <Pencil className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 text-destructive"
-          onClick={() => onDelete(transaction)}
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
+        <div className="flex opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => onEdit(transaction)}
+            aria-label="Editar transacción"
+          >
+            <Pencil className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-destructive hover:text-destructive"
+            onClick={() => onDelete(transaction)}
+            aria-label="Eliminar transacción"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { CalendarClock, Loader2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -100,6 +101,9 @@ export function SubscriptionForm({
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
+          <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-secondary sm:mx-0">
+            <CalendarClock className="h-5 w-5 text-muted-foreground" />
+          </div>
           <DialogTitle>
             {isEdit ? "Editar suscripción" : "Nueva suscripción"}
           </DialogTitle>
@@ -254,11 +258,16 @@ export function SubscriptionForm({
               Cancelar
             </Button>
             <Button type="submit" disabled={pending}>
-              {pending
-                ? "Guardando..."
-                : isEdit
-                  ? "Guardar cambios"
-                  : "Registrar"}
+              {pending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Guardando...
+                </>
+              ) : isEdit ? (
+                "Guardar cambios"
+              ) : (
+                "Registrar"
+              )}
             </Button>
           </DialogFooter>
         </form>

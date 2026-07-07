@@ -1,13 +1,18 @@
+"use client";
+
 import * as React from "react";
 import Link from "next/link";
 import {
   ArrowUpRight,
   ArrowDownRight,
   ArrowLeftRight,
+  ArrowRight,
 } from "lucide-react";
 import { getIconByName } from "@/lib/icons";
 import type { RecentTransactionItem } from "@/core/models/dashboard";
 import { formatCurrency } from "@/core/utils/currency";
+import { cn } from "@/lib/utils";
+import { AnimatedCard } from "@/components/ui/motion";
 
 interface RecentTransactionsWidgetProps {
   transactions: RecentTransactionItem[];
@@ -16,20 +21,20 @@ interface RecentTransactionsWidgetProps {
 const transactionTypeConfig = {
   INCOME: {
     icon: ArrowDownRight,
-    color: "text-green-600",
-    bg: "bg-green-600/10",
+    color: "text-emerald-600",
+    bg: "bg-emerald-500/10",
     sign: "+",
   },
   EXPENSE: {
     icon: ArrowUpRight,
-    color: "text-red-600",
-    bg: "bg-red-600/10",
+    color: "text-rose-600",
+    bg: "bg-rose-500/10",
     sign: "-",
   },
   TRANSFER: {
     icon: ArrowLeftRight,
     color: "text-blue-600",
-    bg: "bg-blue-600/10",
+    bg: "bg-blue-500/10",
     sign: "",
   },
 } as const;
@@ -38,42 +43,49 @@ export function RecentTransactionsWidget({
   transactions,
 }: RecentTransactionsWidgetProps) {
   return (
-    <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+    <AnimatedCard>
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-card-foreground">
-          Transacciones recientes
-        </h2>
+        <div className="flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary">
+            <ArrowLeftRight className="h-4 w-4 text-muted-foreground" />
+          </div>
+          <h2 className="text-lg font-semibold text-card-foreground">
+            Transacciones recientes
+          </h2>
+        </div>
         <Link
           href="/transactions"
-          className="text-sm text-muted-foreground hover:text-foreground"
+          className="group inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           Ver todas
+          <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
         </Link>
       </div>
 
       {transactions.length === 0 ? (
-        <p className="mt-4 text-sm text-muted-foreground">
+        <p className="mt-5 text-sm text-muted-foreground">
           No tienes transacciones registradas.
         </p>
       ) : (
-        <div className="mt-4 space-y-2">
-          {transactions.map((tx) => {
+        <div className="mt-5 space-y-2">
+          {transactions.map((tx, index) => {
             const config = transactionTypeConfig[tx.type];
             const TypeIcon = config.icon;
 
             return (
               <div
                 key={tx.id}
-                className="flex items-center justify-between rounded-lg border border-border p-3"
+                className="group flex items-center justify-between rounded-xl border border-border bg-background/50 p-3 transition-all duration-200 hover:bg-background hover:shadow-sm"
+                style={{ animationDelay: `${index * 40}ms` }}
               >
                 <div className="flex items-center gap-3">
                   <div
-                    className={
-                      "flex h-9 w-9 items-center justify-center rounded-full " +
+                    className={cn(
+                      "flex h-9 w-9 items-center justify-center rounded-full transition-transform duration-200 group-hover:scale-105",
                       config.bg
-                    }
+                    )}
                   >
-                    <TypeIcon className={"h-4 w-4 " + config.color} />
+                    <TypeIcon className={cn("h-4 w-4", config.color)} />
                   </div>
                   <div>
                     <p className="text-sm font-medium text-foreground">
@@ -90,7 +102,7 @@ export function RecentTransactionsWidget({
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className={"text-sm font-semibold " + config.color}>
+                  <p className={cn("text-sm font-semibold", config.color)}>
                     {config.sign}
                     {formatCurrency(tx.amount, tx.currency)}
                   </p>
@@ -111,6 +123,6 @@ export function RecentTransactionsWidget({
           })}
         </div>
       )}
-    </div>
+    </AnimatedCard>
   );
 }

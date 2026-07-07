@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Wallet, Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -162,9 +163,13 @@ export function AccountForm({
 
   const defaultTrigger =
     mode === "create" ? (
-      <Button>Nueva cuenta</Button>
+      <Button>
+        <Wallet className="mr-2 h-4 w-4" />
+        Nueva cuenta
+      </Button>
     ) : (
       <Button variant="ghost" size="sm">
+        <Wallet className="mr-2 h-4 w-4" />
         Editar
       </Button>
     );
@@ -174,6 +179,9 @@ export function AccountForm({
       <DialogTrigger render={trigger ?? defaultTrigger} />
       <DialogContent>
         <DialogHeader>
+          <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-secondary sm:mx-0">
+            <Wallet className="h-5 w-5 text-muted-foreground" />
+          </div>
           <DialogTitle>
             {mode === "create" ? "Nueva cuenta" : "Editar cuenta"}
           </DialogTitle>
@@ -281,13 +289,16 @@ export function AccountForm({
             Cancelar
           </Button>
           <Button type="submit" form="account-form" disabled={status === "submitting"}>
-            {status === "submitting"
-              ? mode === "create"
-                ? "Creando..."
-                : "Guardando..."
-              : mode === "create"
-                ? "Crear cuenta"
-                : "Guardar cambios"}
+            {status === "submitting" ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                {mode === "create" ? "Creando..." : "Guardando..."}
+              </>
+            ) : mode === "create" ? (
+              "Crear cuenta"
+            ) : (
+              "Guardar cambios"
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

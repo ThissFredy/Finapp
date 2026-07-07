@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { MoreVertical, Power, PowerOff, Trash2 } from "lucide-react";
+import { MoreVertical, Power, PowerOff, Trash2, Pencil } from "lucide-react";
 
+import { cn } from "@/lib/utils";
 import { AccountTypeIcon } from "@/components/accounts/AccountTypeIcon";
 import { AccountForm } from "@/components/forms/AccountForm";
 import { DeleteAccountDialog } from "@/components/accounts/DeleteAccountDialog";
@@ -48,11 +49,11 @@ export function AccountCard({ account }: AccountCardProps) {
   }
 
   return (
-    <Card className={isInactive ? "opacity-60" : undefined}>
+    <Card className={cn("group transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md", isInactive && "opacity-60")}>
       <CardHeader className="flex flex-row items-start justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary text-secondary-foreground">
-            <AccountTypeIcon type={account.type} />
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-secondary-foreground transition-colors group-hover:bg-primary/10">
+            <AccountTypeIcon type={account.type} className="transition-colors group-hover:text-foreground" />
           </div>
           <div className="min-w-0">
             <CardTitle className="truncate text-base">{account.name}</CardTitle>
@@ -62,12 +63,18 @@ export function AccountCard({ account }: AccountCardProps) {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" aria-label="Acciones de cuenta">
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Acciones de cuenta"
+              className="h-8 w-8 opacity-60 transition-opacity group-hover:opacity-100"
+            >
               <MoreVertical className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem onSelect={() => setEditOpen(true)}>
+              <Pencil className="mr-2 h-4 w-4" />
               Editar
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -105,7 +112,9 @@ export function AccountCard({ account }: AccountCardProps) {
           {isInactive ? (
             <Badge variant="outline">Inactiva</Badge>
           ) : (
-            <Badge variant="default">Activa</Badge>
+            <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-500/15 dark:text-emerald-400">
+              Activa
+            </Badge>
           )}
         </div>
       </CardContent>

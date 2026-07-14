@@ -41,9 +41,9 @@ export function MonthlySummaryChart({ data }: MonthlySummaryChartProps) {
           income: { label: "Ingresos", color: "var(--chart-1)" },
           expense: { label: "Gastos", color: "var(--chart-2)" },
         }}
-        className="mt-4 h-[250px] w-full"
+        className="mt-4 h-[250px] w-full max-w-full overflow-hidden"
       >
-        <BarChart data={chartData}>
+        <BarChart data={chartData} margin={{ left: 0, right: 0 }}>
           <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="var(--border)" />
           <XAxis
             dataKey="name"
@@ -56,6 +56,8 @@ export function MonthlySummaryChart({ data }: MonthlySummaryChartProps) {
             tickLine={false}
             axisLine={false}
             tickFormatter={(value) => formatCurrency(value, data.currency, true)}
+            width={60}
+            tick={{ fontSize: 12 }}
           />
           <ChartTooltip
             content={

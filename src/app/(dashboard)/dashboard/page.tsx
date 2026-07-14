@@ -18,9 +18,7 @@ export default async function DashboardPage() {
       data.monthly_summary.total_expense > 0);
 
   const dashboardCurrency =
-    data.monthly_summary?.currency ??
-    data.net_worth_totals?.currency ??
-    "COP";
+    data.monthly_summary?.currency ?? data.net_worth_totals?.currency ?? "COP";
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -37,7 +35,7 @@ export default async function DashboardPage() {
 
       {data.monthly_summary && (
         <FadeIn direction="up" delay={2}>
-          <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mb-8 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             <DashboardStatCard
               title="Ingresos"
               amount={data.monthly_summary.total_income}
@@ -68,7 +66,7 @@ export default async function DashboardPage() {
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Columna izquierda: Gráficas */}
-        <div className="space-y-6">
+        <div className="space-y-6 overflow-y-auto">
           <FadeIn direction="up" delay={3}>
             {hasMonthlyData && data.monthly_summary ? (
               <MonthlySummaryChart data={data.monthly_summary} />

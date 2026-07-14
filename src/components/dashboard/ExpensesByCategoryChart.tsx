@@ -52,7 +52,7 @@ export function ExpensesByCategoryChart({
 
       <ChartContainer
         config={chartConfig}
-        className="mx-auto mt-4 h-[280px] w-full"
+        className="mx-auto mt-4 h-[280px] w-full max-w-full overflow-hidden"
       >
         <PieChart>
           <ChartTooltip
@@ -71,8 +71,8 @@ export function ExpensesByCategoryChart({
             data={data}
             dataKey="amount"
             nameKey="category_name"
-            innerRadius={60}
-            outerRadius={100}
+            innerRadius="40%"
+            outerRadius="70%"
             paddingAngle={2}
           >
             {data.map((item, index) => (

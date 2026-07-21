@@ -1,9 +1,15 @@
+import type { Metadata } from "next";
 import { listTransactions } from "@/core/services/transaction.service";
 import { getAccountsWithMeta } from "@/core/services/account.service";
 import { listCategories } from "@/core/services/category.service";
 import { selectAllExchangeRates } from "@/core/db/queries/transaction.queries";
 import { TransactionsClient } from "./TransactionsClient";
 import { FadeIn } from "@/components/ui/motion";
+
+export const metadata: Metadata = {
+  title: "Transacciones",
+  description: "Revisa y gestiona todos tus movimientos financieros.",
+};
 
 export default async function TransactionsPage() {
   const [

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getDashboardData } from "@/core/services/dashboard.service";
 import { ArrowDownRight, ArrowUpRight, Scale } from "lucide-react";
 import { MonthlySummaryChart } from "@/components/dashboard/MonthlySummaryChart";
@@ -8,6 +9,11 @@ import { RecentTransactionsWidget } from "@/components/dashboard/RecentTransacti
 import { DashboardEmptyState } from "@/components/dashboard/DashboardEmptyState";
 import { DashboardStatCard } from "@/components/dashboard/DashboardStatCard";
 import { FadeIn } from "@/components/ui/motion";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description: "Resumen de tu salud financiera del mes actual.",
+};
 
 export default async function DashboardPage() {
   const data = await getDashboardData();

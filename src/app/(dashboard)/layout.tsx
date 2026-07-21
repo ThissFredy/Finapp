@@ -1,9 +1,17 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { UserMenu } from "@/components/auth/UserMenu";
 import { NavBar } from "@/components/layout/NavBar";
 import { getServerSession } from "@/core/services/auth.service";
+
+export const metadata: Metadata = {
+  title: {
+    template: "%s — FinApp",
+    default: "FinApp",
+  },
+};
 
 export default async function DashboardLayout({
   children,

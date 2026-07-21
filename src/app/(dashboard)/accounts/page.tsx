@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Banknote, Plus } from "lucide-react";
 
 import { AccountForm } from "@/components/forms/AccountForm";
@@ -10,6 +11,11 @@ import {
   getAccountsWithMeta,
   getUserBalance,
 } from "@/core/services/account.service";
+
+export const metadata: Metadata = {
+  title: "Mis Cuentas",
+  description: "Gestiona tus cuentas bancarias, tarjetas y efectivo.",
+};
 
 export default async function AccountsPage() {
   const [accounts, balance] = await Promise.all([

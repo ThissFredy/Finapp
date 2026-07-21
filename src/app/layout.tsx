@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "FinApp — Gestión Financiera Personal",
+  title: "FinApp - Sistema de gestión financiera personal",
   description: "Sistema de gestión financiera personal",
 };
 

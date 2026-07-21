@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { listCategories } from "@/core/services/category.service";
 import { CategoriesClient } from "./CategoriesClient";
+
+export const metadata: Metadata = {
+  title: "Categorías",
+  description: "Organiza tus ingresos y gastos por categoría.",
+};
 
 export default async function CategoriesPage() {
   const { income, expense, deleted } = await listCategories();

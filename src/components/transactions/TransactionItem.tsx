@@ -108,6 +108,9 @@ export function TransactionItem({
           {sign}
           {formattedAmount}
         </span>
+        <span className="text-xs text-muted-foreground font-medium">
+          {currency}
+        </span>
         <div className="flex opacity-0 transition-opacity duration-200 group-hover:opacity-100">
           <Button
             variant="ghost"

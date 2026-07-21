@@ -14,18 +14,20 @@ export async function TotalBalanceCard({ balance }: TotalBalanceCardProps) {
   const amount = balance?.total_balance ?? 0;
 
   return (
-    <Card className="relative overflow-hidden border-0 bg-foreground text-primary-foreground shadow-sm">
+    <Card className="relative overflow-hidden border-0 bg-card text-primary-foreground shadow-sm">
       <div className="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-primary-foreground/5" />
       <div className="pointer-events-none absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-primary-foreground/5" />
       <CardContent className="relative flex flex-col gap-2 py-8">
-        <div className="flex items-center gap-2 text-primary-foreground/80">
-          <Wallet className="h-4 w-4" />
-          <p className="text-sm font-medium">Balance total</p>
+        <div className="flex items-center gap-2 text-primary-foreground">
+          <Wallet className="h-4 w-4 text-muted-foreground" />
+          <p className="text-sm font-medium text-muted-foreground">
+            Balance total
+          </p>
         </div>
-        <p className="text-4xl font-bold tracking-tight">
+        <p className="text-4xl font-bold text-foreground">
           {formatCurrency(amount, currency)}
         </p>
-        <p className="text-sm text-primary-foreground/70">
+        <p className="text-sm text-muted-foreground">
           {balance
             ? `Actualizado: ${formatRelativeTime(balance.updated_at)}`
             : "Crea una cuenta para ver tu balance"}

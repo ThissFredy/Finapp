@@ -30,7 +30,7 @@ export function DashboardStatCard({
     <div
       className={cn(
         "group relative overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md",
-        className
+        className,
       )}
     >
       <div className="flex items-start justify-between">
@@ -43,7 +43,7 @@ export function DashboardStatCard({
         <div
           className={cn(
             "flex h-10 w-10 items-center justify-center rounded-xl transition-colors",
-            trendClasses[trend]
+            trendClasses[trend],
           )}
         >
           <Icon className="h-5 w-5" />

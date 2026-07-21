@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { GoogleLoginButton } from "@/components/auth/GoogleLoginButton";
 import { FadeIn } from "@/components/ui/motion";
 import { getServerSession } from "@/core/services/auth.service";
+
+export const metadata: Metadata = {
+  title: "Iniciar Sesión",
+  description: "Accede a tu cuenta de FinApp para gestionar tus finanzas.",
+};
 
 interface LoginPageProps {
   searchParams: Promise<{

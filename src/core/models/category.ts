@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 // --- Enums compartidos ---
-export const CategoryTypeSchema = z.enum(["INCOME", "EXPENSE"]);
+export const CategoryTypeSchema = z.enum(["INGRESO", "GASTO"]);
 
 export type CategoryType = z.infer<typeof CategoryTypeSchema>;
 
@@ -74,15 +74,15 @@ export type UpdateCategoryInput = z.infer<typeof UpdateCategorySchema>;
 export const DeleteCategorySchema = z
   .object({
     id: z.string().uuid(),
-    strategy: z.enum(["hard", "reassign", "soft"]),
+    strategy: z.enum(["Eliminar", "Re-asignar", "Mantener en historial"]),
     reassignTo: z.string().uuid().optional(),
   })
   .refine(
-    (data) => data.strategy !== "reassign" || data.reassignTo !== undefined,
+    (data) => data.strategy !== "Re-asignar" || data.reassignTo !== undefined,
     {
       message: "Debe especificar la categoría destino al re-asignar",
       path: ["reassignTo"],
-    }
+    },
   );
 
 export type DeleteCategoryInput = z.infer<typeof DeleteCategorySchema>;

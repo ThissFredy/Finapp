@@ -19,19 +19,19 @@ interface RecentTransactionsWidgetProps {
 }
 
 const transactionTypeConfig = {
-  INCOME: {
+  INGRESO: {
     icon: ArrowDownRight,
     color: "text-emerald-600",
     bg: "bg-emerald-500/10",
     sign: "+",
   },
-  EXPENSE: {
+  GASTO: {
     icon: ArrowUpRight,
     color: "text-rose-600",
     bg: "bg-rose-500/10",
     sign: "-",
   },
-  TRANSFER: {
+  TRANSFERENCIA: {
     icon: ArrowLeftRight,
     color: "text-blue-600",
     bg: "bg-blue-500/10",
@@ -82,7 +82,7 @@ export function RecentTransactionsWidget({
                   <div
                     className={cn(
                       "flex h-9 w-9 items-center justify-center rounded-full transition-transform duration-200 group-hover:scale-105",
-                      config.bg
+                      config.bg,
                     )}
                   >
                     <TypeIcon className={cn("h-4 w-4", config.color)} />

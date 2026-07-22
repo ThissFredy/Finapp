@@ -36,14 +36,14 @@ export async function listSubscriptions(): Promise<SubscriptionWithMeta[]> {
 // Listar próximos pagos del mes
 export async function listUpcomingPayments(
   year: number,
-  month: number
+  month: number,
 ): Promise<SubscriptionWithMeta[]> {
   return selectUpcomingPayments(year, month);
 }
 
 // Crear una suscripción (validando categoría EXPENSE y cuenta ACTIVE)
 export async function createSubscription(
-  input: CreateSubscriptionInput
+  input: CreateSubscriptionInput,
 ): Promise<void> {
   const userId = await getAuthenticatedUserId();
   await validateSubscriptionRefs(input.category_id, input.account_id);
@@ -52,7 +52,7 @@ export async function createSubscription(
 
 // Editar una suscripción
 export async function updateSubscription(
-  input: UpdateSubscriptionInput
+  input: UpdateSubscriptionInput,
 ): Promise<void> {
   await validateSubscriptionRefs(input.category_id, input.account_id);
   await updateSubscriptionRecord(input.id, input);
@@ -65,7 +65,7 @@ export async function deleteSubscription(id: string): Promise<void> {
 
 // Registrar pago de una suscripción
 export async function registerPayment(
-  input: RegisterPaymentInput
+  input: RegisterPaymentInput,
 ): Promise<void> {
   // El RPC valida ownership, estado, duplicados y atomicidad.
   // La validación de cuenta activa también se hace en el RPC.
@@ -76,7 +76,7 @@ export async function registerPayment(
 export async function getPaymentHistory(
   subscriptionId: string,
   page: number = 1,
-  pageSize: number = 10
+  pageSize: number = 10,
 ): Promise<PaginatedTransactions> {
   return selectTransactionsPaginated({
     subscription_id: subscriptionId,
@@ -88,11 +88,13 @@ export async function getPaymentHistory(
 // Validar que la categoría es EXPENSE y la cuenta está ACTIVE
 async function validateSubscriptionRefs(
   categoryId: string,
-  accountId: string
+  accountId: string,
 ): Promise<void> {
-  const expenseCats = await selectActiveCategoriesByType("EXPENSE");
+  const expenseCats = await selectActiveCategoriesByType("GASTO");
   if (!expenseCats.some((c) => c.id === categoryId)) {
-    throw new Error("La categoría seleccionada no es válida o no es de tipo gasto");
+    throw new Error(
+      "La categoría seleccionada no es válida o no es de tipo gasto",
+    );
   }
   const account = await selectAccountById(accountId);
   if (!account) throw new Error("La cuenta seleccionada no existe");

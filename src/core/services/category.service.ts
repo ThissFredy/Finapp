@@ -78,7 +78,7 @@ export async function deleteCategory(input: {
 
 // Obtener categorías activas por tipo (para selectores de otros módulos)
 export async function getCategoriesByType(
-  type: "INCOME" | "EXPENSE",
+  type: "INGRESO" | "GASTO",
 ): Promise<Category[]> {
   return selectActiveCategoriesByType(type);
 }

@@ -53,21 +53,21 @@ export function SubscriptionForm({
 
   const [name, setName] = useState(subscription?.name ?? "");
   const [amount, setAmount] = useState(
-    subscription ? String(subscription.amount) : ""
+    subscription ? String(subscription.amount) : "",
   );
   const [currency, setCurrency] = useState<Currency>(
-    subscription?.currency ?? "COP"
+    subscription?.currency ?? "COP",
   );
   const [billingCycle, setBillingCycle] = useState<BillingCycle>(
-    subscription?.billing_cycle ?? "MONTHLY"
+    subscription?.billing_cycle ?? "MONTHLY",
   );
   const [nextBillingDate, setNextBillingDate] = useState(
-    subscription?.next_billing_date ?? ""
+    subscription?.next_billing_date ?? "",
   );
   const [categoryId, setCategoryId] = useState(subscription?.category_id ?? "");
   const [accountId, setAccountId] = useState(subscription?.account_id ?? "");
   const [status, setStatus] = useState<SubscriptionStatus>(
-    subscription?.status ?? "ACTIVE"
+    subscription?.status ?? "ACTIVE",
   );
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [pending, setPending] = useState(false);
@@ -85,9 +85,7 @@ export function SubscriptionForm({
       formData.set("status", status);
     }
 
-    const action = isEdit
-      ? updateSubscriptionAction
-      : createSubscriptionAction;
+    const action = isEdit ? updateSubscriptionAction : createSubscriptionAction;
     const result = await action(formData);
     setPending(false);
     if (result.error) {
@@ -196,7 +194,7 @@ export function SubscriptionForm({
               value={categoryId}
               onChange={setCategoryId}
               categories={expenseCategories}
-              type="EXPENSE"
+              type="GASTO"
             />
           </div>
 

@@ -36,7 +36,9 @@ interface CategoryFormProps {
 export function CategoryForm({ open, onClose, category }: CategoryFormProps) {
   const isEditing = !!category;
   const [name, setName] = React.useState(category?.name ?? "");
-  const [type, setType] = React.useState<CategoryType>(category?.type ?? "EXPENSE");
+  const [type, setType] = React.useState<CategoryType>(
+    category?.type ?? "GASTO",
+  );
   const [color, setColor] = React.useState(category?.color ?? "#6B7280");
   const [icon, setIcon] = React.useState(category?.icon ?? "tag");
   const [errors, setErrors] = React.useState<Record<string, string[]>>({});
@@ -102,8 +104,8 @@ export function CategoryForm({ open, onClose, category }: CategoryFormProps) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="INCOME">Ingreso</SelectItem>
-                <SelectItem value="EXPENSE">Gasto</SelectItem>
+                <SelectItem value="INGRESO">INGRESO</SelectItem>
+                <SelectItem value="GASTO">GASTO</SelectItem>
               </SelectContent>
             </Select>
             {isEditing && (

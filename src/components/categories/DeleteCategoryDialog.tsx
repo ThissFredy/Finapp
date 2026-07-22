@@ -36,8 +36,9 @@ interface DeleteFormProps {
 
 function DeleteForm({ category, availableTargets, onClose }: DeleteFormProps) {
   const [strategy, setStrategy] = React.useState<
-    "hard" | "reassign" | "soft"
-  >(category.has_transactions ? "reassign" : "hard");
+    "Eliminar" | "Re-asignar" | "Mantener en historial"
+  >(category.has_transactions ? "Re-asignar" : "Eliminar");
+
   const [reassignTo, setReassignTo] = React.useState("");
   const [errors, setErrors] = React.useState<Record<string, string[]>>({});
 
@@ -46,7 +47,7 @@ function DeleteForm({ category, availableTargets, onClose }: DeleteFormProps) {
     const formData = new FormData();
     formData.set("id", category.id);
     formData.set("strategy", strategy);
-    if (strategy === "reassign") {
+    if (strategy === "Re-asignar") {
       formData.set("reassignTo", reassignTo);
     }
     const result = await deleteCategoryAction(formData);
@@ -66,8 +67,8 @@ function DeleteForm({ category, availableTargets, onClose }: DeleteFormProps) {
         <DialogTitle>Eliminar categoría</DialogTitle>
         <DialogDescription>
           {category.has_transactions
-            ? `La categoría &quot;${category.name}&quot; tiene transacciones asociadas. Elige cómo proceder.`
-            : `¿Seguro que deseas eliminar la categoría &quot;${category.name}&quot;? Esta acción no se puede deshacer.`}
+            ? `La categoría ${category.name} tiene transacciones asociadas. Elige cómo proceder.`
+            : `¿Seguro que deseas eliminar la categoría ${category.name}? Esta acción no se puede deshacer.`}
         </DialogDescription>
       </DialogHeader>
 
@@ -79,31 +80,34 @@ function DeleteForm({ category, availableTargets, onClose }: DeleteFormProps) {
               <Select
                 value={strategy}
                 onValueChange={(v) =>
-                  v && setStrategy(v as "hard" | "reassign" | "soft")
+                  v &&
+                  setStrategy(
+                    v as "Eliminar" | "Re-asignar" | "Mantener en historial",
+                  )
                 }
               >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="reassign">
+                  <SelectItem value="Re-asignar">
                     Re-asignar transacciones a otra categoría
                   </SelectItem>
-                  <SelectItem value="soft">
+                  <SelectItem value="Mantener en historial">
                     Mantener en historial (soft delete)
                   </SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            {strategy === "reassign" && (
+            {strategy === "Re-asignar" && (
               <div className="space-y-2">
                 <Label>Categoría destino</Label>
                 {availableTargets.length === 0 ? (
                   <p className="text-sm text-destructive">
                     No hay otras categorías de este tipo disponibles. Crea una
-                    nueva categoría del mismo tipo antes de eliminar esta, o
-                    usa &quot;mantener en historial&quot;.
+                    nueva categoría del mismo tipo antes de eliminar esta, o usa
+                    &quot;mantener en historial&quot;.
                   </p>
                 ) : (
                   <Select
@@ -130,7 +134,7 @@ function DeleteForm({ category, availableTargets, onClose }: DeleteFormProps) {
               </div>
             )}
 
-            {strategy === "soft" && (
+            {strategy === "Mantener en historial" && (
               <p className="text-sm text-muted-foreground">
                 La categoría se marcará como eliminada. Las transacciones
                 existentes conservarán su referencia y se mostrará como
@@ -167,10 +171,7 @@ export function DeleteCategoryDialog({
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent
-        key={category.id}
-        className="sm:max-w-[480px]"
-      >
+      <DialogContent key={category.id} className="sm:max-w-[480px]">
         <DeleteForm
           category={category}
           availableTargets={availableTargets}

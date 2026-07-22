@@ -16,7 +16,7 @@ type ActionResult<T = void> =
   | { success: false; error: string; fieldErrors?: FieldErrors };
 
 export async function createCategoryAction(
-  formData: FormData
+  formData: FormData,
 ): Promise<ActionResult<Category>> {
   const parsed = CreateCategorySchema.safeParse({
     name: formData.get("name"),
@@ -40,6 +40,7 @@ export async function createCategoryAction(
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Error al crear la categoría";
+    console.error("Error creating category:", error);
     if (message.includes("duplicate") || message.includes("23505")) {
       return {
         success: false,
@@ -52,7 +53,7 @@ export async function createCategoryAction(
 }
 
 export async function updateCategoryAction(
-  formData: FormData
+  formData: FormData,
 ): Promise<ActionResult<Category>> {
   const parsed = UpdateCategorySchema.safeParse({
     id: formData.get("id"),
@@ -90,7 +91,7 @@ export async function updateCategoryAction(
 }
 
 export async function deleteCategoryAction(
-  formData: FormData
+  formData: FormData,
 ): Promise<ActionResult> {
   const parsed = DeleteCategorySchema.safeParse({
     id: formData.get("id"),

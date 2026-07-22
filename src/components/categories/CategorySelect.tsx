@@ -29,12 +29,26 @@ export function CategorySelect({
   return (
     <Select value={value} onValueChange={(v) => v && onChange(v)}>
       <SelectTrigger>
-        <SelectValue placeholder={placeholder} />
+        <SelectValue placeholder={placeholder}>
+          {(() => {
+            const selected = categories.find((c) => c.id === value);
+            if (!selected) return placeholder;
+            return (
+              <div className="flex items-center gap-2">
+                {React.createElement(getIconByName(selected.icon), {
+                  className: "h-4 w-4",
+                  style: { color: selected.color },
+                })}
+                {selected.name}
+              </div>
+            );
+          })()}
+        </SelectValue>
       </SelectTrigger>
       <SelectContent>
         {categories.length === 0 ? (
           <div className="px-2 py-4 text-center text-sm text-muted-foreground">
-            No hay categorías de {type === "INCOME" ? "ingreso" : "gasto"}.{" "}
+            No hay categorías de {type === "INGRESO" ? "ingreso" : "gasto"}.{" "}
             <a href="/categories" className="text-primary underline">
               Crear una
             </a>

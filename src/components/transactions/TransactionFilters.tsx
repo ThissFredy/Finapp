@@ -41,7 +41,7 @@ export function TransactionFilters({
   const hasFilters = from_date || to_date || account_id || category_id;
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-1 sm:grid-cols-2 lg:grid-cols-4">
       <div className="space-y-1">
         <Label htmlFor="from_date">Desde</Label>
         <Input
@@ -77,21 +77,25 @@ export function TransactionFilters({
       <div className="space-y-1">
         <Label>Cuenta</Label>
         <Select
-          value={account_id || "all"}
+          value={account_id || "Todas"}
           onValueChange={(v) =>
             onChange({
               from_date,
               to_date,
-              account_id: !v || v === "all" ? "" : v,
+              account_id: !v || v === "Todas" ? "" : v,
               category_id,
             })
           }
         >
           <SelectTrigger>
-            <SelectValue placeholder="Todas" />
+            <SelectValue placeholder="Todas">
+              {account_id
+                ? accounts.find((a) => a.id === account_id)?.name
+                : "Todas las cuentas"}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todas las cuentas</SelectItem>
+            <SelectItem value="Todas">Todas las cuentas</SelectItem>
             {accounts.map((a) => (
               <SelectItem key={a.id} value={a.id}>
                 {a.name}
@@ -103,21 +107,25 @@ export function TransactionFilters({
       <div className="space-y-1">
         <Label>Categoría</Label>
         <Select
-          value={category_id || "all"}
+          value={category_id || "Todas"}
           onValueChange={(v) =>
             onChange({
               from_date,
               to_date,
               account_id,
-              category_id: !v || v === "all" ? "" : v,
+              category_id: !v || v === "Todas" ? "" : v,
             })
           }
         >
           <SelectTrigger>
-            <SelectValue placeholder="Todas" />
+            <SelectValue placeholder="Todas">
+              {category_id
+                ? categories.find((c) => c.id === category_id)?.name
+                : "Todas las categorías"}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todas las categorías</SelectItem>
+            <SelectItem value="Todas">Todas las categorías</SelectItem>
             {categories.map((c) => (
               <SelectItem key={c.id} value={c.id}>
                 {c.name}

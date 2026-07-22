@@ -39,9 +39,9 @@ export function TransactionItem({
     category_deleted_at,
   } = transaction;
 
-  const isIncome = type === "INCOME";
-  const isExpense = type === "EXPENSE";
-  const isTransfer = type === "TRANSFER";
+  const isIncome = type === "INGRESO";
+  const isExpense = type === "GASTO";
+  const isTransfer = type === "TRANSFERENCIA";
 
   const Icon = isIncome
     ? ArrowDownCircle
@@ -75,7 +75,7 @@ export function TransactionItem({
     !isTransfer && exchange_rate !== 1
       ? ` · equiv. ${formatCurrency(
           amount * exchange_rate,
-          currency as Currency
+          currency as Currency,
         )} en ${account_name}`
       : "";
 
@@ -85,10 +85,13 @@ export function TransactionItem({
         <div
           className={cn(
             "flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-transform duration-200 group-hover:scale-105",
-            bgClass
+            bgClass,
           )}
           style={{
-            backgroundColor: category_color && !isTransfer && !isIncome ? `${category_color}22` : undefined,
+            backgroundColor:
+              category_color && !isTransfer && !isIncome
+                ? `${category_color}22`
+                : undefined,
           }}
         >
           <Icon className={cn("h-5 w-5", colorClass)} />

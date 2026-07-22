@@ -48,16 +48,16 @@ export function CategoryCard({
       </div>
 
       <Badge
-        variant={category.type === "INCOME" ? "default" : "secondary"}
+        variant={category.type === "INGRESO" ? "default" : "secondary"}
         className={cn(
           "shrink-0",
-          category.type === "INCOME" &&
+          category.type === "INGRESO" &&
             "bg-emerald-100 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-500/15 dark:text-emerald-400",
-          category.type === "EXPENSE" &&
-            "bg-rose-100 text-rose-700 hover:bg-rose-100 dark:bg-rose-500/15 dark:text-rose-400"
+          category.type === "GASTO" &&
+            "bg-rose-100 text-rose-700 hover:bg-rose-100 dark:bg-rose-500/15 dark:text-rose-400",
         )}
       >
-        {category.type === "INCOME" ? "Ingreso" : "Gasto"}
+        {category.type === "INGRESO" ? "Ingreso" : "Gasto"}
       </Badge>
 
       <DropdownMenu>

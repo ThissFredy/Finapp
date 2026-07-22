@@ -182,7 +182,11 @@ export function RegisterPaymentDialog({
               onValueChange={(v) => setAccountId(v ?? "")}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Selecciona una cuenta" />
+                <SelectValue placeholder="Selecciona una cuenta">
+                  {accountId
+                    ? activeAccounts.find((a) => a.id === accountId)?.name
+                    : "Selecciona una cuenta"}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {activeAccounts.map((a) => (

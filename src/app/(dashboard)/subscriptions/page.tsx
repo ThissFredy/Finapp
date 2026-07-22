@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
-import { listSubscriptions, listUpcomingPayments } from "@/core/services/subscription.service";
+import {
+  listSubscriptions,
+  listUpcomingPayments,
+} from "@/core/services/subscription.service";
 import { selectAccountsWithMeta } from "@/core/db/queries/account.queries";
 import { selectActiveCategoriesByType } from "@/core/db/queries/category.queries";
 import { selectAllExchangeRates } from "@/core/db/queries/transaction.queries";
@@ -28,7 +31,7 @@ export default async function SubscriptionsPage() {
     listSubscriptions(),
     listUpcomingPayments(year, month),
     selectAccountsWithMeta(),
-    selectActiveCategoriesByType("EXPENSE"),
+    selectActiveCategoriesByType("GASTO"),
     selectAllExchangeRates(),
     selectUserBalance(),
   ]);

@@ -28,7 +28,7 @@ async function getAuthenticatedUserId(): Promise<string> {
 
 // Listar transacciones paginadas con filtros
 export async function listTransactions(
-  filters: TransactionFilters
+  filters: TransactionFilters,
 ): Promise<PaginatedTransactions> {
   return selectTransactionsPaginated(filters);
 }
@@ -36,14 +36,14 @@ export async function listTransactions(
 // Resolver la tasa de cambio: 1.0 si misma moneda, lookup en exchange_rates si difiere
 export async function resolveExchangeRate(
   fromCurrency: string,
-  toCurrency: string
+  toCurrency: string,
 ): Promise<number | null> {
   return selectExchangeRate(fromCurrency, toCurrency);
 }
 
 // Crear una transacción (validando cuenta activa y categoría coherente)
 export async function createTransaction(
-  input: CreateTransactionInput
+  input: CreateTransactionInput,
 ): Promise<Transaction> {
   const userId = await getAuthenticatedUserId();
   await validateTransactionAccounts(input);
@@ -52,7 +52,7 @@ export async function createTransaction(
 
 // Editar una transacción
 export async function updateTransaction(
-  input: UpdateTransactionInput
+  input: UpdateTransactionInput,
 ): Promise<Transaction> {
   await validateTransactionAccounts(input);
   return updateTransactionRecord(input.id, input);
@@ -66,9 +66,9 @@ export async function deleteTransaction(id: string): Promise<void> {
 // Validar que las cuentas involucradas existen, pertenecen al usuario y están activas,
 // y que la categoría (si aplica) es del tipo correcto.
 async function validateTransactionAccounts(
-  input: CreateTransactionInput | UpdateTransactionInput
+  input: CreateTransactionInput | UpdateTransactionInput,
 ): Promise<void> {
-  if (input.type === "INCOME" || input.type === "EXPENSE") {
+  if (input.type === "INGRESO" || input.type === "GASTO") {
     const account = await selectAccountById(input.account_id!);
     if (!account) throw new Error("La cuenta seleccionada no existe");
     if (account.status !== "ACTIVE") {
@@ -77,7 +77,7 @@ async function validateTransactionAccounts(
     const cats = await selectActiveCategoriesByType(input.type);
     if (!cats.some((c) => c.id === input.category_id)) {
       throw new Error(
-        "La categoría seleccionada no es válida para este tipo de transacción"
+        "La categoría seleccionada no es válida para este tipo de transacción",
       );
     }
   } else {

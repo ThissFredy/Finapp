@@ -48,7 +48,7 @@ export function CategorySelect({
       <SelectContent>
         {categories.length === 0 ? (
           <div className="px-2 py-4 text-center text-sm text-muted-foreground">
-            No hay categorías de {type === "INCOME" ? "ingreso" : "gasto"}.{" "}
+            No hay categorías de {type === "INGRESO" ? "ingreso" : "gasto"}.{" "}
             <a href="/categories" className="text-primary underline">
               Crear una
             </a>

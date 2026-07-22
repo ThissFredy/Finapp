@@ -26,7 +26,7 @@ function parseTransactionFormData(formData: FormData) {
 
 export async function createTransactionAction(formData: FormData) {
   const parsed = CreateTransactionSchema.safeParse(
-    parseTransactionFormData(formData)
+    parseTransactionFormData(formData),
   );
   if (!parsed.success) {
     return { error: parsed.error.flatten().fieldErrors };

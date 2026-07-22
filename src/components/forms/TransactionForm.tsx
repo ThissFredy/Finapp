@@ -169,7 +169,7 @@ export function TransactionForm({
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="INGRESO">Ingreso</TabsTrigger>
               <TabsTrigger value="GASTO">Gasto</TabsTrigger>
-              <TabsTrigger value="TRANSFER">Transferencia</TabsTrigger>
+              <TabsTrigger value="TRANSFERENCIA">Transferencia</TabsTrigger>
             </TabsList>
           </Tabs>
 

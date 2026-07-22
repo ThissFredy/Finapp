@@ -10,7 +10,7 @@ import type {
 
 // Listar transacciones paginadas con filtros (vía RPC)
 export async function selectTransactionsPaginated(
-  filters: TransactionFilters
+  filters: TransactionFilters,
 ): Promise<PaginatedTransactions> {
   const supabase = await createServerClientInstance();
   const { data, error } = await supabase.rpc("get_transactions_paginated", {
@@ -35,7 +35,7 @@ export async function selectTransactionsPaginated(
 
 // Obtener una transacción por ID
 export async function selectTransactionById(
-  id: string
+  id: string,
 ): Promise<Transaction | null> {
   const supabase = await createServerClientInstance();
   const { data, error } = await supabase
@@ -50,7 +50,7 @@ export async function selectTransactionById(
 // Consultar tasa de cambio desde la tabla exchange_rates (asunción 8)
 export async function selectExchangeRate(
   from: string,
-  to: string
+  to: string,
 ): Promise<number | null> {
   if (from === to) return 1.0;
   const supabase = await createServerClientInstance();
@@ -78,7 +78,7 @@ export async function selectAllExchangeRates(): Promise<
 
 // Construir el objeto fila a insertar/actualizar según el tipo
 function buildRow(
-  input: CreateTransactionInput | UpdateTransactionInput
+  input: CreateTransactionInput | UpdateTransactionInput,
 ): Record<string, unknown> {
   const row: Record<string, unknown> = {
     type: input.type,
@@ -88,7 +88,7 @@ function buildRow(
     date: input.date.toISOString(),
     description: input.description || null,
   };
-  if (input.type === "INCOME" || input.type === "EXPENSE") {
+  if (input.type === "INGRESO" || input.type === "GASTO") {
     row.account_id = input.account_id;
     row.category_id = input.category_id;
     row.from_account_id = null;
@@ -105,7 +105,7 @@ function buildRow(
 // Insertar una nueva transacción
 export async function insertTransaction(
   input: CreateTransactionInput,
-  userId: string
+  userId: string,
 ): Promise<Transaction> {
   const supabase = await createServerClientInstance();
   const row = buildRow(input);
@@ -122,7 +122,7 @@ export async function insertTransaction(
 // Actualizar una transacción existente
 export async function updateTransactionRecord(
   id: string,
-  input: UpdateTransactionInput
+  input: UpdateTransactionInput,
 ): Promise<Transaction> {
   const supabase = await createServerClientInstance();
   const { data, error } = await supabase

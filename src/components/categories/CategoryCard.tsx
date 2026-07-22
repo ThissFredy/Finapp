@@ -39,7 +39,7 @@ export function CategoryCard({
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="truncate font-medium">{category.name}</p>
+        <p className="truncate font-medium text-center">{category.name}</p>
         <p className="text-xs text-muted-foreground">
           {category.has_transactions
             ? "Tiene transacciones"

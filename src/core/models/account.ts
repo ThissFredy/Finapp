@@ -43,13 +43,10 @@ export const CreateAccountSchema = z
     currency: CurrencySchema,
     initial_balance: z.coerce.number(),
   })
-  .refine(
-    (data) => data.type !== "CASH" || data.initial_balance >= 0,
-    {
-      message: "Las cuentas de efectivo no pueden tener saldo negativo",
-      path: ["initial_balance"],
-    }
-  );
+  .refine((data) => data.type !== "CASH" || data.initial_balance >= 0, {
+    message: "Las cuentas de efectivo no pueden tener saldo negativo",
+    path: ["initial_balance"],
+  });
 
 export type CreateAccountInput = z.infer<typeof CreateAccountSchema>;
 
@@ -70,7 +67,7 @@ export const UpdateAccountSchema = z
     {
       message: "Las cuentas de efectivo no pueden tener saldo negativo",
       path: ["initial_balance"],
-    }
+    },
   );
 
 export type UpdateAccountInput = z.infer<typeof UpdateAccountSchema>;

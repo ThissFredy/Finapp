@@ -9,12 +9,7 @@ import { AccountForm } from "@/components/forms/AccountForm";
 import { DeleteAccountDialog } from "@/components/accounts/DeleteAccountDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -49,11 +44,19 @@ export function AccountCard({ account }: AccountCardProps) {
   }
 
   return (
-    <Card className={cn("group transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md", isInactive && "opacity-60")}>
+    <Card
+      className={cn(
+        "group transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md",
+        isInactive && "opacity-60",
+      )}
+    >
       <CardHeader className="flex flex-row items-start justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-secondary-foreground transition-colors group-hover:bg-primary/10">
-            <AccountTypeIcon type={account.type} className="transition-colors group-hover:text-foreground" />
+            <AccountTypeIcon
+              type={account.type}
+              className="transition-colors group-hover:text-foreground"
+            />
           </div>
           <div className="min-w-0">
             <CardTitle className="truncate text-base">{account.name}</CardTitle>
@@ -77,10 +80,7 @@ export function AccountCard({ account }: AccountCardProps) {
               <Pencil className="mr-2 h-4 w-4" />
               Editar
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onSelect={handleToggle}
-              disabled={isToggling}
-            >
+            <DropdownMenuItem onSelect={handleToggle} disabled={isToggling}>
               {isInactive ? (
                 <>
                   <Power className="mr-2 h-4 w-4" /> Activar

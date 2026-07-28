@@ -9,14 +9,14 @@ const localeMap: Record<Currency, string> = {
 export function formatCurrency(
   amount: number,
   currency: Currency,
-  compact: boolean = false
+  compact: boolean = false,
 ): string {
   return new Intl.NumberFormat(localeMap[currency], {
     style: "currency",
     currency,
     notation: compact ? "compact" : "standard",
-    minimumFractionDigits: currency === "COP" ? 0 : 2,
-    maximumFractionDigits: currency === "COP" ? 0 : 2,
+    minimumFractionDigits: currency === "COP" ? 2 : 2,
+    maximumFractionDigits: currency === "COP" ? 3 : 3,
   }).format(amount);
 }
 

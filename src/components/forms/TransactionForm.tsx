@@ -41,6 +41,7 @@ interface ExchangeRateRow {
 interface TransactionFormProps {
   open: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
   accounts: Account[];
   incomeCategories: Category[];
   expenseCategories: Category[];
@@ -51,6 +52,7 @@ interface TransactionFormProps {
 export function TransactionForm({
   open,
   onClose,
+  onSuccess,
   accounts,
   incomeCategories,
   expenseCategories,
@@ -145,6 +147,9 @@ export function TransactionForm({
     if (result.error) {
       setErrors(result.error as Record<string, string[]>);
     } else {
+      if (onSuccess) {
+        onSuccess();
+      }
       onClose();
     }
   }

@@ -20,6 +20,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { UserMenu } from "../auth/UserMenu";
+import type { AuthSession } from "@/core/models/profile";
+import { useState } from "react";
 
 const navItems = [
   { href: "/dashboard", label: "Inicio", icon: LayoutDashboard },
@@ -29,8 +32,13 @@ const navItems = [
   { href: "/subscriptions", label: "Suscripciones", icon: Repeat },
 ];
 
-export function NavBar() {
+interface NavBarProps {
+  session: AuthSession;
+}
+
+export function NavBar({ session }: NavBarProps) {
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
@@ -49,7 +57,7 @@ export function NavBar() {
                 "group relative inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-sm font-medium transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
                 isActive
                   ? "text-foreground"
-                  : "text-muted-foreground hover:text-foreground hover:bg-secondary/70"
+                  : "text-muted-foreground hover:text-foreground hover:bg-secondary/70",
               )}
             >
               {isActive && (
@@ -58,7 +66,7 @@ export function NavBar() {
               <Icon
                 className={cn(
                   "relative h-4 w-4 transition-transform duration-200 group-hover:scale-110",
-                  isActive ? "text-foreground" : "text-muted-foreground"
+                  isActive ? "text-foreground" : "text-muted-foreground",
                 )}
               />
               <span className="relative">{item.label}</span>
@@ -68,7 +76,7 @@ export function NavBar() {
       </nav>
 
       {/* Mobile */}
-      <Sheet>
+      <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild className="md:hidden">
           <Button variant="ghost" size="icon" aria-label="Abrir menú">
             <Menu className="h-5 w-5" />
@@ -77,10 +85,9 @@ export function NavBar() {
         <SheetContent side="right" className="w-72">
           <SheetHeader>
             <SheetTitle className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground text-background font-bold">
-                F
+              <div className="flex items-center justify-between gap-2">
+                <UserMenu session={session} />
               </div>
-              <span>FinApp</span>
             </SheetTitle>
           </SheetHeader>
           <nav className="mt-6 flex flex-col gap-1">
@@ -97,13 +104,14 @@ export function NavBar() {
                     "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                     isActive
                       ? "bg-secondary text-foreground"
-                      : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
+                      : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
                   )}
+                  onClick={() => setIsOpen(false)}
                 >
                   <Icon
                     className={cn(
                       "h-4 w-4",
-                      isActive ? "text-foreground" : "text-muted-foreground"
+                      isActive ? "text-foreground" : "text-muted-foreground",
                     )}
                   />
                   {item.label}

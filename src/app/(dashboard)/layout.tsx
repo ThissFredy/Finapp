@@ -38,9 +38,10 @@ export default async function DashboardLayout({
             <span className="text-lg font-bold tracking-tight">FinApp</span>
           </Link>
 
-          <NavBar />
-
-          <UserMenu session={session} />
+          <NavBar session={session} />
+          <div className="hidden md:flex">
+            <UserMenu session={session} />
+          </div>
         </div>
       </header>
 

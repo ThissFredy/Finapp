@@ -17,11 +17,13 @@ import type { TransactionWithDetails } from "@/core/models/transaction";
 interface DeleteTransactionDialogProps {
   transaction: TransactionWithDetails | null;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
 export function DeleteTransactionDialog({
   transaction,
   onClose,
+  onSuccess,
 }: DeleteTransactionDialogProps) {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -37,6 +39,9 @@ export function DeleteTransactionDialog({
     if (result.error) {
       setError(result.error._form?.[0] ?? "Error al eliminar");
     } else {
+      if (onSuccess) {
+        onSuccess();
+      }
       onClose();
     }
   }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import { CheckCircle2, Loader2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -59,6 +60,7 @@ export function RegisterPaymentDialog({
 
   // Pre-llenar campos cuando se abre el diálogo
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     if (subscription) {
       setAmount(String(subscription.amount));
       setDescription(`Suscripción: ${subscription.name}`);
@@ -67,6 +69,7 @@ export function RegisterPaymentDialog({
       setDate(new Date().toISOString().split("T")[0]);
       setErrors({});
     }
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, [subscription]);
 
   // Moneda de la cuenta seleccionada
@@ -81,16 +84,20 @@ export function RegisterPaymentDialog({
 
   // Auto-llenar tasa desde exchange_rates
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     if (showExchangeRate && accountCurrency) {
       const found = exchangeRates.find(
         (r) =>
           r.from_currency === subCurrency &&
           r.to_currency === accountCurrency
       );
-      if (found) setExchangeRate(String(found.rate));
+      if (found) {
+        setExchangeRate(String(found.rate));
+      }
     } else if (!showExchangeRate) {
       setExchangeRate("1");
     }
+    /* eslint-enable react-hooks/set-state-in-effect */
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountCurrency, showExchangeRate, subCurrency]);
 
@@ -119,6 +126,9 @@ export function RegisterPaymentDialog({
     <Dialog open={!!subscription} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
+          <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-secondary sm:mx-0">
+            <CheckCircle2 className="h-5 w-5 text-muted-foreground" />
+          </div>
           <DialogTitle>Registrar pago de suscripción</DialogTitle>
           <DialogDescription>
             Se generará una transacción de gasto en la cuenta seleccionada.
@@ -172,7 +182,11 @@ export function RegisterPaymentDialog({
               onValueChange={(v) => setAccountId(v ?? "")}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Selecciona una cuenta" />
+                <SelectValue placeholder="Selecciona una cuenta">
+                  {accountId
+                    ? activeAccounts.find((a) => a.id === accountId)?.name
+                    : "Selecciona una cuenta"}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {activeAccounts.map((a) => (
@@ -250,7 +264,14 @@ export function RegisterPaymentDialog({
               Cancelar
             </Button>
             <Button type="submit" disabled={pending}>
-              {pending ? "Procesando..." : "Confirmar pago"}
+              {pending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Procesando...
+                </>
+              ) : (
+                "Confirmar pago"
+              )}
             </Button>
           </DialogFooter>
         </form>

@@ -2,7 +2,11 @@ import { z } from "zod";
 import { CurrencySchema } from "@/core/models/account";
 
 // --- Enums ---
-export const TransactionTypeSchema = z.enum(["INCOME", "EXPENSE", "TRANSFER"]);
+export const TransactionTypeSchema = z.enum([
+  "INGRESO",
+  "GASTO",
+  "TRANSFERENCIA",
+]);
 export type TransactionType = z.infer<typeof TransactionTypeSchema>;
 
 // --- Transaction (registro completo desde BD) ---
@@ -39,7 +43,9 @@ export const TransactionWithDetailsSchema = TransactionSchema.extend({
   total_count: z.number(),
 });
 
-export type TransactionWithDetails = z.infer<typeof TransactionWithDetailsSchema>;
+export type TransactionWithDetails = z.infer<
+  typeof TransactionWithDetailsSchema
+>;
 
 // --- Campos base reutilizables ---
 const positiveAmount = z.coerce
@@ -51,11 +57,9 @@ const exchangeRateField = z.coerce
   .positive("La tasa debe ser mayor a 0")
   .default(1.0);
 
-const dateField = z.coerce
-  .date()
-  .refine((d) => d <= new Date(), {
-    message: "La fecha no puede ser futura",
-  });
+const dateField = z.coerce.date().refine((d) => d <= new Date(), {
+  message: "La fecha no puede ser futura",
+});
 
 const descriptionField = z
   .string()
@@ -79,7 +83,7 @@ export const CreateTransactionSchema = z
     category_id: z.string().uuid().optional(),
   })
   .superRefine((data, ctx) => {
-    if (data.type === "INCOME" || data.type === "EXPENSE") {
+    if (data.type === "INGRESO" || data.type === "GASTO") {
       if (!data.account_id) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -102,7 +106,7 @@ export const CreateTransactionSchema = z
         });
       }
     }
-    if (data.type === "TRANSFER") {
+    if (data.type === "TRANSFERENCIA") {
       if (!data.from_account_id) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -144,7 +148,7 @@ export type CreateTransactionInput = z.infer<typeof CreateTransactionSchema>;
 export const UpdateTransactionSchema = CreateTransactionSchema.and(
   z.object({
     id: z.string().uuid("ID de transacción inválido"),
-  })
+  }),
 );
 
 export type UpdateTransactionInput = z.infer<typeof UpdateTransactionSchema>;

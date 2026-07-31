@@ -33,15 +33,15 @@ export async function listCategories(): Promise<{
 }> {
   const all = await selectCategoriesWithMeta();
   return {
-    income: all.filter((c) => c.type === "INCOME" && c.deleted_at === null),
-    expense: all.filter((c) => c.type === "EXPENSE" && c.deleted_at === null),
+    income: all.filter((c) => c.type === "INGRESO" && c.deleted_at === null),
+    expense: all.filter((c) => c.type === "GASTO" && c.deleted_at === null),
     deleted: all.filter((c) => c.deleted_at !== null),
   };
 }
 
 // Crear una nueva categoría
 export async function createCategory(
-  input: CreateCategoryInput
+  input: CreateCategoryInput,
 ): Promise<Category> {
   const userId = await getAuthenticatedUserId();
   return insertCategory(input, userId);
@@ -49,7 +49,7 @@ export async function createCategory(
 
 // Editar una categoría (name, color, icon — nunca type)
 export async function updateCategory(
-  input: UpdateCategoryInput
+  input: UpdateCategoryInput,
 ): Promise<Category> {
   return updateCategoryRecord(input.id, input);
 }
@@ -57,20 +57,20 @@ export async function updateCategory(
 // Eliminar una categoría según la estrategia seleccionada
 export async function deleteCategory(input: {
   id: string;
-  strategy: "hard" | "reassign" | "soft";
+  strategy: "Eliminar" | "Re-asignar" | "Mantener en historial";
   reassignTo?: string;
 }): Promise<void> {
   switch (input.strategy) {
-    case "hard":
+    case "Eliminar":
       await hardDeleteCategory(input.id);
       break;
-    case "reassign":
+    case "Re-asignar":
       if (!input.reassignTo) {
         throw new Error("Debe especificar la categoría destino");
       }
       await reassignAndDeleteCategory(input.id, input.reassignTo);
       break;
-    case "soft":
+    case "Mantener en historial":
       await softDeleteCategory(input.id);
       break;
   }
@@ -78,7 +78,7 @@ export async function deleteCategory(input: {
 
 // Obtener categorías activas por tipo (para selectores de otros módulos)
 export async function getCategoriesByType(
-  type: "INCOME" | "EXPENSE"
+  type: "INGRESO" | "GASTO",
 ): Promise<Category[]> {
   return selectActiveCategoriesByType(type);
 }

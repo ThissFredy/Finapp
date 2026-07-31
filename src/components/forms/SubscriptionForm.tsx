@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { CalendarClock, Loader2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -52,21 +53,21 @@ export function SubscriptionForm({
 
   const [name, setName] = useState(subscription?.name ?? "");
   const [amount, setAmount] = useState(
-    subscription ? String(subscription.amount) : ""
+    subscription ? String(subscription.amount) : "",
   );
   const [currency, setCurrency] = useState<Currency>(
-    subscription?.currency ?? "COP"
+    subscription?.currency ?? "COP",
   );
   const [billingCycle, setBillingCycle] = useState<BillingCycle>(
-    subscription?.billing_cycle ?? "MONTHLY"
+    subscription?.billing_cycle ?? "MONTHLY",
   );
   const [nextBillingDate, setNextBillingDate] = useState(
-    subscription?.next_billing_date ?? ""
+    subscription?.next_billing_date ?? "",
   );
   const [categoryId, setCategoryId] = useState(subscription?.category_id ?? "");
   const [accountId, setAccountId] = useState(subscription?.account_id ?? "");
   const [status, setStatus] = useState<SubscriptionStatus>(
-    subscription?.status ?? "ACTIVE"
+    subscription?.status ?? "ACTIVE",
   );
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [pending, setPending] = useState(false);
@@ -84,9 +85,7 @@ export function SubscriptionForm({
       formData.set("status", status);
     }
 
-    const action = isEdit
-      ? updateSubscriptionAction
-      : createSubscriptionAction;
+    const action = isEdit ? updateSubscriptionAction : createSubscriptionAction;
     const result = await action(formData);
     setPending(false);
     if (result.error) {
@@ -100,6 +99,9 @@ export function SubscriptionForm({
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
+          <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-secondary sm:mx-0">
+            <CalendarClock className="h-5 w-5 text-muted-foreground" />
+          </div>
           <DialogTitle>
             {isEdit ? "Editar suscripción" : "Nueva suscripción"}
           </DialogTitle>
@@ -192,7 +194,7 @@ export function SubscriptionForm({
               value={categoryId}
               onChange={setCategoryId}
               categories={expenseCategories}
-              type="EXPENSE"
+              type="GASTO"
             />
           </div>
 
@@ -205,7 +207,11 @@ export function SubscriptionForm({
               onValueChange={(v) => setAccountId(v ?? "")}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Selecciona una cuenta" />
+                <SelectValue placeholder="Selecciona una cuenta">
+                  {accountId
+                    ? activeAccounts.find((a) => a.id === accountId)?.name
+                    : "Selecciona una cuenta"}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {activeAccounts.map((a) => (
@@ -254,11 +260,16 @@ export function SubscriptionForm({
               Cancelar
             </Button>
             <Button type="submit" disabled={pending}>
-              {pending
-                ? "Guardando..."
-                : isEdit
-                  ? "Guardar cambios"
-                  : "Registrar"}
+              {pending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Guardando...
+                </>
+              ) : isEdit ? (
+                "Guardar cambios"
+              ) : (
+                "Registrar"
+              )}
             </Button>
           </DialogFooter>
         </form>

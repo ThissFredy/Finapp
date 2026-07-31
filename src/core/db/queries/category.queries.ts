@@ -16,7 +16,7 @@ export async function selectCategoriesWithMeta(): Promise<CategoryWithMeta[]> {
 
 // Obtener categorías activas filtradas por tipo (para selectores de TransactionForm)
 export async function selectActiveCategoriesByType(
-  type: "INCOME" | "EXPENSE"
+  type: "INGRESO" | "GASTO",
 ): Promise<Category[]> {
   const supabase = await createServerClientInstance();
   const {
@@ -37,7 +37,7 @@ export async function selectActiveCategoriesByType(
 // Insertar una nueva categoría
 export async function insertCategory(
   input: CreateCategoryInput,
-  userId: string
+  userId: string,
 ): Promise<Category> {
   const supabase = await createServerClientInstance();
   const { data, error } = await supabase
@@ -58,7 +58,7 @@ export async function insertCategory(
 // Actualizar una categoría existente (solo name, color, icon — nunca type)
 export async function updateCategoryRecord(
   id: string,
-  input: UpdateCategoryInput
+  input: UpdateCategoryInput,
 ): Promise<Category> {
   const supabase = await createServerClientInstance();
   const updateData: Record<string, unknown> = {};
@@ -96,7 +96,7 @@ export async function hardDeleteCategory(id: string): Promise<void> {
 // Re-asignar transacciones y eliminar categoría origen (vía RPC)
 export async function reassignAndDeleteCategory(
   sourceId: string,
-  targetId: string
+  targetId: string,
 ): Promise<void> {
   const supabase = await createServerClientInstance();
   const { error } = await supabase.rpc("reassign_category_transactions", {

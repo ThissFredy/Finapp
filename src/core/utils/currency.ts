@@ -6,12 +6,17 @@ const localeMap: Record<Currency, string> = {
   EUR: "es-ES",
 };
 
-export function formatCurrency(amount: number, currency: Currency): string {
+export function formatCurrency(
+  amount: number,
+  currency: Currency,
+  compact: boolean = false,
+): string {
   return new Intl.NumberFormat(localeMap[currency], {
     style: "currency",
     currency,
-    minimumFractionDigits: currency === "COP" ? 0 : 2,
-    maximumFractionDigits: currency === "COP" ? 0 : 2,
+    notation: compact ? "compact" : "standard",
+    minimumFractionDigits: currency === "COP" ? 2 : 2,
+    maximumFractionDigits: currency === "COP" ? 3 : 3,
   }).format(amount);
 }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { ArrowLeftRight, Loader2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -40,6 +41,7 @@ interface ExchangeRateRow {
 interface TransactionFormProps {
   open: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
   accounts: Account[];
   incomeCategories: Category[];
   expenseCategories: Category[];
@@ -50,6 +52,7 @@ interface TransactionFormProps {
 export function TransactionForm({
   open,
   onClose,
+  onSuccess,
   accounts,
   incomeCategories,
   expenseCategories,
@@ -60,39 +63,39 @@ export function TransactionForm({
   const activeAccounts = accounts.filter((a) => a.status === "ACTIVE");
 
   const [type, setType] = useState<TransactionType>(
-    transaction?.type ?? "EXPENSE"
+    transaction?.type ?? "GASTO",
   );
   const [amount, setAmount] = useState(
-    transaction ? String(transaction.amount) : ""
+    transaction ? String(transaction.amount) : "",
   );
   const [currency, setCurrency] = useState<Currency>(
-    transaction?.currency ?? "COP"
+    transaction?.currency ?? "COP",
   );
   const [exchangeRate, setExchangeRate] = useState<string>(
-    transaction ? String(transaction.exchange_rate) : "1"
+    transaction ? String(transaction.exchange_rate) : "1",
   );
   const [accountId, setAccountId] = useState(transaction?.account_id ?? "");
   const [fromAccountId, setFromAccountId] = useState(
-    transaction?.from_account_id ?? ""
+    transaction?.from_account_id ?? "",
   );
   const [toAccountId, setToAccountId] = useState(
-    transaction?.to_account_id ?? ""
+    transaction?.to_account_id ?? "",
   );
   const [categoryId, setCategoryId] = useState(transaction?.category_id ?? "");
   const [date, setDate] = useState(
     transaction
       ? transaction.date.split("T")[0]
-      : new Date().toISOString().split("T")[0]
+      : new Date().toISOString().split("T")[0],
   );
   const [description, setDescription] = useState(
-    transaction?.description ?? ""
+    transaction?.description ?? "",
   );
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [pending, setPending] = useState(false);
 
   // Moneda de la cuenta afectada (para decidir si mostrar exchange_rate)
   const affectedAccountCurrency = useMemo<Currency | null>(() => {
-    if (type === "TRANSFER") {
+    if (type === "TRANSFERENCIA") {
       const from = activeAccounts.find((a) => a.id === fromAccountId);
       return from ? from.currency : null;
     }
@@ -106,12 +109,12 @@ export function TransactionForm({
   // Sugerir tasa desde exchange_rates según moneda de transacción y cuenta afectada
   function applySuggestedRate(
     txCurrency: Currency,
-    accountCurrency: Currency | null
+    accountCurrency: Currency | null,
   ) {
     if (accountCurrency && txCurrency !== accountCurrency) {
       const found = exchangeRates.find(
         (r) =>
-          r.from_currency === txCurrency && r.to_currency === accountCurrency
+          r.from_currency === txCurrency && r.to_currency === accountCurrency,
       );
       setExchangeRate(found ? String(found.rate) : "");
     } else {
@@ -120,9 +123,9 @@ export function TransactionForm({
   }
 
   const categories =
-    type === "INCOME"
+    type === "INGRESO"
       ? incomeCategories
-      : type === "EXPENSE"
+      : type === "GASTO"
         ? expenseCategories
         : [];
 
@@ -133,7 +136,7 @@ export function TransactionForm({
     const formData = new FormData(e.currentTarget);
     formData.set("type", type);
     formData.set("exchange_rate", exchangeRate);
-    if (type === "INCOME" || type === "EXPENSE") {
+    if (type === "INGRESO" || type === "GASTO") {
       formData.set("category_id", categoryId);
     }
     if (isEdit && transaction) formData.set("id", transaction.id);
@@ -144,6 +147,9 @@ export function TransactionForm({
     if (result.error) {
       setErrors(result.error as Record<string, string[]>);
     } else {
+      if (onSuccess) {
+        onSuccess();
+      }
       onClose();
     }
   }
@@ -152,6 +158,9 @@ export function TransactionForm({
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
+          <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-secondary sm:mx-0">
+            <ArrowLeftRight className="h-5 w-5 text-muted-foreground" />
+          </div>
           <DialogTitle>
             {isEdit ? "Editar transacción" : "Nueva transacción"}
           </DialogTitle>
@@ -163,9 +172,9 @@ export function TransactionForm({
             onValueChange={(v: string) => setType(v as TransactionType)}
           >
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="INCOME">Ingreso</TabsTrigger>
-              <TabsTrigger value="EXPENSE">Gasto</TabsTrigger>
-              <TabsTrigger value="TRANSFER">Transferencia</TabsTrigger>
+              <TabsTrigger value="INGRESO">Ingreso</TabsTrigger>
+              <TabsTrigger value="GASTO">Gasto</TabsTrigger>
+              <TabsTrigger value="TRANSFERENCIA">Transferencia</TabsTrigger>
             </TabsList>
           </Tabs>
 
@@ -235,7 +244,7 @@ export function TransactionForm({
           )}
 
           {/* Cuentas según tipo */}
-          {type === "TRANSFER" ? (
+          {type === "TRANSFERENCIA" ? (
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
                 <Label>Desde</Label>
@@ -251,7 +260,12 @@ export function TransactionForm({
                   }}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Cuenta origen" />
+                    <SelectValue placeholder="Cuenta origen">
+                      {fromAccountId
+                        ? activeAccounts.find((a) => a.id === fromAccountId)
+                            ?.name
+                        : "Cuenta origen"}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {activeAccounts.map((a) => (
@@ -270,7 +284,11 @@ export function TransactionForm({
                   onValueChange={(v) => v && setToAccountId(v)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Cuenta destino" />
+                    <SelectValue placeholder="Cuenta destino">
+                      {toAccountId
+                        ? activeAccounts.find((a) => a.id === toAccountId)?.name
+                        : "Cuenta destino"}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {activeAccounts.map((a) => (
@@ -297,7 +315,11 @@ export function TransactionForm({
                 }}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecciona una cuenta" />
+                  <SelectValue placeholder="Selecciona una cuenta">
+                    {accountId
+                      ? activeAccounts.find((a) => a.id === accountId)?.name
+                      : "Selecciona una cuenta"}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {activeAccounts.map((a) => (
@@ -311,7 +333,7 @@ export function TransactionForm({
           )}
 
           {/* Categoría (solo INCOME/EXPENSE) */}
-          {type !== "TRANSFER" && (
+          {type !== "TRANSFERENCIA" && (
             <div className="space-y-1">
               <Label>Categoría</Label>
               <CategorySelect
@@ -366,11 +388,16 @@ export function TransactionForm({
               Cancelar
             </Button>
             <Button type="submit" disabled={pending}>
-              {pending
-                ? "Guardando..."
-                : isEdit
-                  ? "Guardar cambios"
-                  : "Registrar"}
+              {pending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Guardando...
+                </>
+              ) : isEdit ? (
+                "Guardar cambios"
+              ) : (
+                "Registrar"
+              )}
             </Button>
           </DialogFooter>
         </form>

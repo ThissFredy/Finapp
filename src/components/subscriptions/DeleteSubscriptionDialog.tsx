@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AlertTriangle, Loader2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -44,6 +45,9 @@ export function DeleteSubscriptionDialog({
     <Dialog open={!!subscription} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-sm">
         <DialogHeader>
+          <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10 sm:mx-0">
+            <AlertTriangle className="h-6 w-6 text-destructive" />
+          </div>
           <DialogTitle>Eliminar suscripción</DialogTitle>
           <DialogDescription>
             La suscripción se eliminará de todas las vistas. Las
@@ -62,7 +66,14 @@ export function DeleteSubscriptionDialog({
             disabled={pending}
             onClick={handleDelete}
           >
-            {pending ? "Eliminando..." : "Eliminar"}
+            {pending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Eliminando...
+              </>
+            ) : (
+              "Eliminar"
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

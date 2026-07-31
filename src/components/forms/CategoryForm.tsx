@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { Tags } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -35,7 +36,9 @@ interface CategoryFormProps {
 export function CategoryForm({ open, onClose, category }: CategoryFormProps) {
   const isEditing = !!category;
   const [name, setName] = React.useState(category?.name ?? "");
-  const [type, setType] = React.useState<CategoryType>(category?.type ?? "EXPENSE");
+  const [type, setType] = React.useState<CategoryType>(
+    category?.type ?? "GASTO",
+  );
   const [color, setColor] = React.useState(category?.color ?? "#6B7280");
   const [icon, setIcon] = React.useState(category?.icon ?? "tag");
   const [errors, setErrors] = React.useState<Record<string, string[]>>({});
@@ -65,8 +68,11 @@ export function CategoryForm({ open, onClose, category }: CategoryFormProps) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent key={category?.id ?? "new"} className="sm:max-w-[480px]">
+      <DialogContent key={category?.id ?? "new"} className="sm:max-w-[480px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
+          <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-secondary sm:mx-0">
+            <Tags className="h-5 w-5 text-muted-foreground" />
+          </div>
           <DialogTitle>
             {isEditing ? "Editar categoría" : "Nueva categoría"}
           </DialogTitle>
@@ -98,8 +104,8 @@ export function CategoryForm({ open, onClose, category }: CategoryFormProps) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="INCOME">Ingreso</SelectItem>
-                <SelectItem value="EXPENSE">Gasto</SelectItem>
+                <SelectItem value="INGRESO">INGRESO</SelectItem>
+                <SelectItem value="GASTO">GASTO</SelectItem>
               </SelectContent>
             </Select>
             {isEditing && (

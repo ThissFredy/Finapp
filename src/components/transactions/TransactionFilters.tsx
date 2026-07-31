@@ -39,6 +39,29 @@ export function TransactionFilters({
   onChange,
 }: TransactionFiltersProps) {
   const hasFilters = from_date || to_date || account_id || category_id;
+  const isValidDateRange = !from_date || !to_date || from_date <= to_date;
+
+  function handleFromDateChange(value: string) {
+    onChange({
+      from_date: value,
+      to_date: !value || (to_date && value > to_date) ? "" : to_date,
+      account_id,
+      category_id,
+    });
+  }
+
+  function handleToDateChange(value: string) {
+    if (!from_date || (value && value < from_date)) {
+      return;
+    }
+
+    onChange({
+      from_date,
+      to_date: value,
+      account_id,
+      category_id,
+    });
+  }
 
   return (
     <div className="grid gap-1 sm:grid-cols-2 lg:grid-cols-4">
@@ -48,14 +71,7 @@ export function TransactionFilters({
           id="from_date"
           type="date"
           value={from_date}
-          onChange={(e) =>
-            onChange({
-              from_date: e.target.value,
-              to_date,
-              account_id,
-              category_id,
-            })
-          }
+          onChange={(e) => handleFromDateChange(e.target.value)}
         />
       </div>
       <div className="space-y-1">
@@ -64,14 +80,10 @@ export function TransactionFilters({
           id="to_date"
           type="date"
           value={to_date}
-          onChange={(e) =>
-            onChange({
-              from_date,
-              to_date: e.target.value,
-              account_id,
-              category_id,
-            })
-          }
+          min={from_date || undefined}
+          disabled={!from_date}
+          aria-invalid={!isValidDateRange}
+          onChange={(e) => handleToDateChange(e.target.value)}
         />
       </div>
       <div className="space-y-1">

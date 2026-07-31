@@ -75,8 +75,13 @@ export function TransactionsClient({
         setPage(result.data.page);
       }
     },
-    [filters, pageSize]
+    [filters, pageSize],
   );
+
+  // --- Handlers ---
+  function handleOnSuccess() {
+    refresh(1, filters);
+  }
 
   function handleFiltersChange(next: typeof filters) {
     setFilters(next);
@@ -146,6 +151,7 @@ export function TransactionsClient({
       <TransactionForm
         open={formOpen}
         onClose={() => setFormOpen(false)}
+        onSuccess={handleOnSuccess}
         accounts={accounts}
         incomeCategories={incomeCategories}
         expenseCategories={expenseCategories}
@@ -156,6 +162,7 @@ export function TransactionsClient({
       <DeleteTransactionDialog
         transaction={deleting}
         onClose={() => setDeleting(null)}
+        onSuccess={handleOnSuccess}
       />
     </div>
   );

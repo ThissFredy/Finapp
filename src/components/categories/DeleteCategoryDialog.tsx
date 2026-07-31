@@ -1,10 +1,7 @@
 "use client";
 
 import * as React from "react";
-<<<<<<< HEAD
 import { AlertTriangle } from "lucide-react";
-=======
->>>>>>> origin/master
 import {
   Dialog,
   DialogContent,
@@ -39,14 +36,9 @@ interface DeleteFormProps {
 
 function DeleteForm({ category, availableTargets, onClose }: DeleteFormProps) {
   const [strategy, setStrategy] = React.useState<
-<<<<<<< HEAD
     "Eliminar" | "Re-asignar" | "Mantener en historial"
   >(category.has_transactions ? "Re-asignar" : "Eliminar");
 
-=======
-    "hard" | "reassign" | "soft"
-  >(category.has_transactions ? "reassign" : "hard");
->>>>>>> origin/master
   const [reassignTo, setReassignTo] = React.useState("");
   const [errors, setErrors] = React.useState<Record<string, string[]>>({});
 
@@ -55,11 +47,7 @@ function DeleteForm({ category, availableTargets, onClose }: DeleteFormProps) {
     const formData = new FormData();
     formData.set("id", category.id);
     formData.set("strategy", strategy);
-<<<<<<< HEAD
     if (strategy === "Re-asignar") {
-=======
-    if (strategy === "reassign") {
->>>>>>> origin/master
       formData.set("reassignTo", reassignTo);
     }
     const result = await deleteCategoryAction(formData);
@@ -73,7 +61,6 @@ function DeleteForm({ category, availableTargets, onClose }: DeleteFormProps) {
   return (
     <>
       <DialogHeader>
-<<<<<<< HEAD
         <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10 sm:mx-0">
           <AlertTriangle className="h-6 w-6 text-destructive" />
         </div>
@@ -82,13 +69,6 @@ function DeleteForm({ category, availableTargets, onClose }: DeleteFormProps) {
           {category.has_transactions
             ? `La categoría ${category.name} tiene transacciones asociadas. Elige cómo proceder.`
             : `¿Seguro que deseas eliminar la categoría ${category.name}? Esta acción no se puede deshacer.`}
-=======
-        <DialogTitle>Eliminar categoría</DialogTitle>
-        <DialogDescription>
-          {category.has_transactions
-            ? `La categoría &quot;${category.name}&quot; tiene transacciones asociadas. Elige cómo proceder.`
-            : `¿Seguro que deseas eliminar la categoría &quot;${category.name}&quot;? Esta acción no se puede deshacer.`}
->>>>>>> origin/master
         </DialogDescription>
       </DialogHeader>
 
@@ -100,54 +80,34 @@ function DeleteForm({ category, availableTargets, onClose }: DeleteFormProps) {
               <Select
                 value={strategy}
                 onValueChange={(v) =>
-<<<<<<< HEAD
                   v &&
                   setStrategy(
                     v as "Eliminar" | "Re-asignar" | "Mantener en historial",
                   )
-=======
-                  v && setStrategy(v as "hard" | "reassign" | "soft")
->>>>>>> origin/master
                 }
               >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-<<<<<<< HEAD
                   <SelectItem value="Re-asignar">
                     Re-asignar transacciones a otra categoría
                   </SelectItem>
                   <SelectItem value="Mantener en historial">
-=======
-                  <SelectItem value="reassign">
-                    Re-asignar transacciones a otra categoría
-                  </SelectItem>
-                  <SelectItem value="soft">
->>>>>>> origin/master
                     Mantener en historial (soft delete)
                   </SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-<<<<<<< HEAD
             {strategy === "Re-asignar" && (
-=======
-            {strategy === "reassign" && (
->>>>>>> origin/master
               <div className="space-y-2">
                 <Label>Categoría destino</Label>
                 {availableTargets.length === 0 ? (
                   <p className="text-sm text-destructive">
                     No hay otras categorías de este tipo disponibles. Crea una
-<<<<<<< HEAD
                     nueva categoría del mismo tipo antes de eliminar esta, o usa
                     &quot;mantener en historial&quot;.
-=======
-                    nueva categoría del mismo tipo antes de eliminar esta, o
-                    usa &quot;mantener en historial&quot;.
->>>>>>> origin/master
                   </p>
                 ) : (
                   <Select
@@ -174,11 +134,7 @@ function DeleteForm({ category, availableTargets, onClose }: DeleteFormProps) {
               </div>
             )}
 
-<<<<<<< HEAD
             {strategy === "Mantener en historial" && (
-=======
-            {strategy === "soft" && (
->>>>>>> origin/master
               <p className="text-sm text-muted-foreground">
                 La categoría se marcará como eliminada. Las transacciones
                 existentes conservarán su referencia y se mostrará como
@@ -215,14 +171,7 @@ export function DeleteCategoryDialog({
 
   return (
     <Dialog open onOpenChange={onClose}>
-<<<<<<< HEAD
       <DialogContent key={category.id} className="sm:max-w-[480px]">
-=======
-      <DialogContent
-        key={category.id}
-        className="sm:max-w-[480px]"
-      >
->>>>>>> origin/master
         <DeleteForm
           category={category}
           availableTargets={availableTargets}

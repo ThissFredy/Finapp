@@ -33,15 +33,24 @@ export async function listCategories(): Promise<{
 }> {
   const all = await selectCategoriesWithMeta();
   return {
+<<<<<<< HEAD
     income: all.filter((c) => c.type === "INGRESO" && c.deleted_at === null),
     expense: all.filter((c) => c.type === "GASTO" && c.deleted_at === null),
+=======
+    income: all.filter((c) => c.type === "INCOME" && c.deleted_at === null),
+    expense: all.filter((c) => c.type === "EXPENSE" && c.deleted_at === null),
+>>>>>>> origin/master
     deleted: all.filter((c) => c.deleted_at !== null),
   };
 }
 
 // Crear una nueva categoría
 export async function createCategory(
+<<<<<<< HEAD
   input: CreateCategoryInput,
+=======
+  input: CreateCategoryInput
+>>>>>>> origin/master
 ): Promise<Category> {
   const userId = await getAuthenticatedUserId();
   return insertCategory(input, userId);
@@ -49,7 +58,11 @@ export async function createCategory(
 
 // Editar una categoría (name, color, icon — nunca type)
 export async function updateCategory(
+<<<<<<< HEAD
   input: UpdateCategoryInput,
+=======
+  input: UpdateCategoryInput
+>>>>>>> origin/master
 ): Promise<Category> {
   return updateCategoryRecord(input.id, input);
 }
@@ -57,6 +70,7 @@ export async function updateCategory(
 // Eliminar una categoría según la estrategia seleccionada
 export async function deleteCategory(input: {
   id: string;
+<<<<<<< HEAD
   strategy: "Eliminar" | "Re-asignar" | "Mantener en historial";
   reassignTo?: string;
 }): Promise<void> {
@@ -65,12 +79,26 @@ export async function deleteCategory(input: {
       await hardDeleteCategory(input.id);
       break;
     case "Re-asignar":
+=======
+  strategy: "hard" | "reassign" | "soft";
+  reassignTo?: string;
+}): Promise<void> {
+  switch (input.strategy) {
+    case "hard":
+      await hardDeleteCategory(input.id);
+      break;
+    case "reassign":
+>>>>>>> origin/master
       if (!input.reassignTo) {
         throw new Error("Debe especificar la categoría destino");
       }
       await reassignAndDeleteCategory(input.id, input.reassignTo);
       break;
+<<<<<<< HEAD
     case "Mantener en historial":
+=======
+    case "soft":
+>>>>>>> origin/master
       await softDeleteCategory(input.id);
       break;
   }
@@ -78,7 +106,11 @@ export async function deleteCategory(input: {
 
 // Obtener categorías activas por tipo (para selectores de otros módulos)
 export async function getCategoriesByType(
+<<<<<<< HEAD
   type: "INGRESO" | "GASTO",
+=======
+  type: "INCOME" | "EXPENSE"
+>>>>>>> origin/master
 ): Promise<Category[]> {
   return selectActiveCategoriesByType(type);
 }

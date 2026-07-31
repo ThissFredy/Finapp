@@ -46,7 +46,7 @@ export function CategoriesClient({
         (c) =>
           c.id !== deletingCategory.id &&
           c.type === deletingCategory.type &&
-          c.deleted_at === null
+          c.deleted_at === null,
       )
     : [];
 

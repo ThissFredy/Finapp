@@ -86,6 +86,10 @@ export const UpdateSubscriptionSchema = z.object({
 export type UpdateSubscriptionInput = z.infer<typeof UpdateSubscriptionSchema>;
 
 // --- RegisterPaymentInput (diálogo de confirmación de pago) ---
+const nonNegativeAmount = z.coerce
+  .number()
+  .min(0, "El monto no puede ser negativo");
+
 const paymentDateField = z.coerce.date().refine((d) => d <= new Date(), {
   message: "La fecha no puede ser futura",
 });
@@ -99,7 +103,7 @@ const descriptionField = z
 
 export const RegisterPaymentSchema = z.object({
   subscription_id: z.string().uuid("ID de suscripción inválido"),
-  amount: positiveAmount,
+  amount: nonNegativeAmount,
   exchange_rate: z.coerce
     .number()
     .positive("La tasa debe ser mayor a 0")

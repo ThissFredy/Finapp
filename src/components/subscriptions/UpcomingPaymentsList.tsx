@@ -18,7 +18,8 @@ interface ExchangeRateRow {
 }
 
 interface UpcomingPaymentsListProps {
-  initialPayments: SubscriptionWithMeta[];
+  payments: SubscriptionWithMeta[];
+  onPaymentsChange: (payments: SubscriptionWithMeta[]) => void;
   initialYear: number;
   initialMonth: number;
   exchangeRates: ExchangeRateRow[];
@@ -32,14 +33,14 @@ const monthNames = [
 ];
 
 export function UpcomingPaymentsList({
-  initialPayments,
+  payments,
+  onPaymentsChange,
   initialYear,
   initialMonth,
   exchangeRates,
   preferredCurrency,
   onPay,
 }: UpcomingPaymentsListProps) {
-  const [payments, setPayments] = useState(initialPayments);
   const [year, setYear] = useState(initialYear);
   const [month, setMonth] = useState(initialMonth);
   const [loading, setLoading] = useState(false);
@@ -49,9 +50,9 @@ export function UpcomingPaymentsList({
     const result = await listUpcomingPaymentsAction(y, m);
     setLoading(false);
     if (result.data) {
-      setPayments(result.data);
+      onPaymentsChange(result.data);
     }
-  }, []);
+  }, [onPaymentsChange]);
 
   function handlePrevMonth() {
     let m = month - 1;

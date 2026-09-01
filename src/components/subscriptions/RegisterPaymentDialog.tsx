@@ -36,6 +36,7 @@ interface RegisterPaymentDialogProps {
   accounts: Account[];
   exchangeRates: ExchangeRateRow[];
   onClose: () => void;
+  onPaid: (subscriptionId: string) => void;
 }
 
 export function RegisterPaymentDialog({
@@ -43,6 +44,7 @@ export function RegisterPaymentDialog({
   accounts,
   exchangeRates,
   onClose,
+  onPaid,
 }: RegisterPaymentDialogProps) {
   const activeAccounts = accounts.filter((a) => a.status === "ACTIVE");
   const isAccountInactive =
@@ -116,6 +118,7 @@ export function RegisterPaymentDialog({
     if (result.error) {
       setErrors(result.error as Record<string, string[]>);
     } else {
+      onPaid(subscription.id);
       onClose();
     }
   }

@@ -49,6 +49,8 @@ export function SubscriptionsClient({
   const [paying, setPaying] = useState<SubscriptionWithMeta | null>(null);
   const [history, setHistory] = useState<SubscriptionWithMeta | null>(null);
   const [deleting, setDeleting] = useState<SubscriptionWithMeta | null>(null);
+  const [paidIds, setPaidIds] = useState<string[]>([]);
+  const [upcomingList, setUpcomingList] = useState(upcomingPayments);
 
   function handleNew() {
     setEditing(null);
@@ -58,6 +60,13 @@ export function SubscriptionsClient({
   function handleEdit(s: SubscriptionWithMeta) {
     setEditing(s);
     setFormOpen(true);
+  }
+
+  function handlePaid(subscriptionId: string) {
+    setPaidIds((prev) =>
+      prev.includes(subscriptionId) ? prev : [...prev, subscriptionId]
+    );
+    setUpcomingList((prev) => prev.filter((s) => s.id !== subscriptionId));
   }
 
   return (
@@ -87,7 +96,8 @@ export function SubscriptionsClient({
           {tab === "upcoming" && (
             <div className="pt-4">
               <UpcomingPaymentsList
-                initialPayments={upcomingPayments}
+                payments={upcomingList}
+                onPaymentsChange={setUpcomingList}
                 initialYear={initialYear}
                 initialMonth={initialMonth}
                 exchangeRates={exchangeRates}
@@ -106,17 +116,22 @@ export function SubscriptionsClient({
                   description="No tienes suscripciones registradas. Crea una para empezar a controlar tus pagos recurrentes."
                 />
               ) : (
-                subscriptions.map((s, index) => (
-                  <AnimatedListItem key={s.id} index={index}>
-                    <SubscriptionCard
-                      subscription={s}
-                      onEdit={handleEdit}
-                      onDelete={setDeleting}
-                      onPay={setPaying}
-                      onHistory={setHistory}
-                    />
-                  </AnimatedListItem>
-                ))
+                subscriptions.map((s, index) => {
+                  const effective = paidIds.includes(s.id)
+                    ? { ...s, is_paid_this_cycle: true }
+                    : s;
+                  return (
+                    <AnimatedListItem key={s.id} index={index}>
+                      <SubscriptionCard
+                        subscription={effective}
+                        onEdit={handleEdit}
+                        onDelete={setDeleting}
+                        onPay={setPaying}
+                        onHistory={setHistory}
+                      />
+                    </AnimatedListItem>
+                  );
+                })
               )}
             </div>
           )}
@@ -136,6 +151,7 @@ export function SubscriptionsClient({
         accounts={accounts}
         exchangeRates={exchangeRates}
         onClose={() => setPaying(null)}
+        onPaid={handlePaid}
       />
 
       <PaymentHistoryDialog

@@ -80,7 +80,6 @@ export async function registerPaymentAction(formData: FormData) {
   }
   try {
     await subscriptionService.registerPayment(parsed.data);
-    revalidatePath("/subscriptions");
     revalidatePath("/transactions");
     revalidatePath("/");
     return { success: true };

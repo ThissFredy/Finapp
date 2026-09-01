@@ -25,7 +25,7 @@ export function ExpensesByCategoryChart({
 }: ExpensesByCategoryChartProps) {
   const chartConfig = data.reduce(
     (acc, item, index) => {
-      acc[item.category_id] = {
+      acc[item.category_name] = {
         label: item.category_name,
         color: item.category_color || `var(--chart-${(index % 5) + 1})`,
       };
@@ -59,6 +59,7 @@ export function ExpensesByCategoryChart({
             content={
               <ChartTooltipContent
                 nameKey="category_name"
+                labelKey="category_name"
                 formatter={(value) => (
                   <span className="font-mono font-medium tabular-nums">
                     {formatCurrency(Number(value), currency)}

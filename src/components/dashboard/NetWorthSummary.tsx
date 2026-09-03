@@ -1,6 +1,6 @@
 "use client";
 
-import { CreditCard, Wallet, Banknote, Landmark } from "lucide-react";
+import { CreditCard, Wallet, Banknote } from "lucide-react";
 import type { NetWorthAccount } from "@/core/models/dashboard";
 import type { Currency } from "@/core/models/account";
 import { formatCurrency } from "@/core/utils/currency";
@@ -29,56 +29,30 @@ const accountTypeLabel = {
   CASH: "Efectivo",
 } as const;
 
-export function NetWorthSummary({ accounts, totals }: NetWorthSummaryProps) {
+export function NetWorthSummary({ accounts }: NetWorthSummaryProps) {
   return (
     <AnimatedCard>
-      <div className="flex items-center gap-2">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary">
-          <Landmark className="h-4 w-4 text-muted-foreground" />
-        </div>
-        <h2 className="text-lg font-semibold text-card-foreground">
-          Patrimonio neto
-        </h2>
-      </div>
+      <h2 className="text-lg font-semibold tracking-tight text-card-foreground">
+        Distribución por cuenta
+      </h2>
 
-      {totals && (
-        <div className="mt-5 grid grid-cols-3 gap-3">
-          <SummaryPill
-            label="Activos"
-            amount={totals.total_assets}
-            currency={totals.currency}
-            variant="positive"
-          />
-          <SummaryPill
-            label="Deudas"
-            amount={totals.total_debts}
-            currency={totals.currency}
-            variant="negative"
-          />
-          <SummaryPill
-            label="Neto"
-            amount={totals.net_worth}
-            currency={totals.currency}
-            variant={totals.net_worth >= 0 ? "positive" : "negative"}
-          />
-        </div>
-      )}
-
-      <div className="mt-5 space-y-2">
-        {accounts.map((account, index) => {
+      <div className="mt-4 space-y-2">
+        {accounts.map((account) => {
           const Icon = accountTypeIcon[account.account_type];
           return (
             <div
               key={account.account_id}
-              className="group flex items-center justify-between rounded-xl border border-border bg-background/50 p-3 transition-all duration-200 hover:bg-background hover:shadow-sm"
-              style={{ animationDelay: `${index * 40}ms` }}
+              className="group flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-background/40 p-3 transition-all duration-200 hover:bg-background/70"
             >
-              <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary transition-colors group-hover:bg-primary/10">
-                  <Icon className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-foreground" />
+              <div className="flex min-w-0 items-center gap-3">
+                <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 transition-colors group-hover:bg-primary/20">
+                  <Icon
+                    className="size-4 text-primary"
+                    aria-hidden="true"
+                  />
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-foreground">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium text-foreground">
                     {account.account_name}
                   </p>
                   <p className="text-xs text-muted-foreground">
@@ -91,9 +65,9 @@ export function NetWorthSummary({ accounts, totals }: NetWorthSummaryProps) {
               <div className="text-right">
                 <p
                   className={cn(
-                    "text-sm font-semibold",
+                    "numeric text-sm font-semibold",
                     account.account_type === "CREDIT"
-                      ? "text-rose-600"
+                      ? "text-expense"
                       : "text-foreground"
                   )}
                 >
@@ -103,7 +77,7 @@ export function NetWorthSummary({ accounts, totals }: NetWorthSummaryProps) {
                   )}
                 </p>
                 {account.account_currency !== account.currency && (
-                  <p className="text-xs text-muted-foreground">
+                  <p className="numeric text-xs text-muted-foreground">
                     {formatCurrency(
                       account.balance,
                       account.account_currency
@@ -116,33 +90,5 @@ export function NetWorthSummary({ accounts, totals }: NetWorthSummaryProps) {
         })}
       </div>
     </AnimatedCard>
-  );
-}
-
-function SummaryPill({
-  label,
-  amount,
-  currency,
-  variant,
-}: {
-  label: string;
-  amount: number;
-  currency: Currency;
-  variant: "positive" | "negative";
-}) {
-  return (
-    <div
-      className={cn(
-        "rounded-xl p-3",
-        variant === "positive"
-          ? "bg-emerald-500/8 text-emerald-700 dark:text-emerald-400"
-          : "bg-rose-500/8 text-rose-700 dark:text-rose-400"
-      )}
-    >
-      <p className="text-xs opacity-80">{label}</p>
-      <p className="mt-1 text-sm font-semibold">
-        {formatCurrency(amount, currency)}
-      </p>
-    </div>
   );
 }

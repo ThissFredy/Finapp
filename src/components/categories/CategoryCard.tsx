@@ -27,19 +27,20 @@ export function CategoryCard({
   onDelete,
 }: CategoryCardProps) {
   return (
-    <Card className="group flex items-center gap-3 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+    <Card className="group card-lift flex items-center gap-3 p-4">
       <div
-        className="flex h-11 w-11 items-center justify-center rounded-full transition-transform duration-200 group-hover:scale-105"
+        className="flex size-11 shrink-0 items-center justify-center rounded-full transition-transform duration-200 group-hover:scale-105"
         style={{ backgroundColor: category.color + "20" }}
+        aria-hidden="true"
       >
         {React.createElement(getIconByName(category.icon), {
-          className: "h-5 w-5",
+          className: "size-5",
           style: { color: category.color },
         })}
       </div>
 
-      <div className="flex-1 min-w-0">
-        <p className="truncate font-medium text-center">{category.name}</p>
+      <div className="min-w-0 flex-1">
+        <p className="truncate font-medium">{category.name}</p>
         <p className="text-xs text-muted-foreground">
           {category.has_transactions
             ? "Tiene transacciones"
@@ -48,13 +49,11 @@ export function CategoryCard({
       </div>
 
       <Badge
-        variant={category.type === "INGRESO" ? "default" : "secondary"}
+        variant="secondary"
         className={cn(
           "shrink-0",
-          category.type === "INGRESO" &&
-            "bg-emerald-100 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-500/15 dark:text-emerald-400",
-          category.type === "GASTO" &&
-            "bg-rose-100 text-rose-700 hover:bg-rose-100 dark:bg-rose-500/15 dark:text-rose-400",
+          category.type === "INGRESO" && "bg-income/12 text-income hover:bg-income/20",
+          category.type === "GASTO" && "bg-expense/12 text-expense hover:bg-expense/20",
         )}
       >
         {category.type === "INGRESO" ? "Ingreso" : "Gasto"}
@@ -64,22 +63,23 @@ export function CategoryCard({
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
-            size="icon"
-            className="h-8 w-8 shrink-0 opacity-60 transition-opacity group-hover:opacity-100"
+            size="icon-sm"
+            aria-label={`Acciones de categoría ${category.name}`}
+            className="shrink-0 opacity-70 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
           >
-            <MoreVertical className="h-4 w-4" />
+            <MoreVertical className="size-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => onEdit(category)}>
-            <Pencil className="mr-2 h-4 w-4" />
+            <Pencil className="size-4" aria-hidden="true" />
             Editar
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => onDelete(category)}
             variant="destructive"
           >
-            <Trash2 className="mr-2 h-4 w-4" />
+            <Trash2 className="size-4" aria-hidden="true" />
             Eliminar
           </DropdownMenuItem>
         </DropdownMenuContent>

@@ -1,5 +1,4 @@
 import { Wallet } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { getServerProfile } from "@/core/services/auth.service";
 import { formatCurrency, formatRelativeTime } from "@/core/utils/currency";
 import type { UserBalance } from "@/core/models/account";
@@ -14,25 +13,40 @@ export async function TotalBalanceCard({ balance }: TotalBalanceCardProps) {
   const amount = balance?.total_balance ?? 0;
 
   return (
-    <Card className="relative overflow-hidden border-0 bg-card text-primary-foreground shadow-sm">
-      <div className="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-primary-foreground/5" />
-      <div className="pointer-events-none absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-primary-foreground/5" />
-      <CardContent className="relative flex flex-col gap-2 py-8">
-        <div className="flex items-center gap-2 text-primary-foreground">
-          <Wallet className="h-4 w-4 text-muted-foreground" />
-          <p className="text-sm font-medium text-muted-foreground">
+    <section
+      aria-labelledby="total-balance-title"
+      className="glass-card relative overflow-hidden rounded-3xl p-6 sm:p-8"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-24 -right-16 size-56 rounded-full bg-primary/25 blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-28 -left-20 size-56 rounded-full bg-[oklch(0.62_0.22_330)]/20 blur-3xl"
+      />
+
+      <div className="relative">
+        <div className="flex items-center gap-2">
+          <span className="flex size-8 items-center justify-center rounded-xl bg-primary/15">
+            <Wallet className="size-4 text-primary" aria-hidden="true" />
+          </span>
+          <h2
+            id="total-balance-title"
+            className="text-sm font-medium text-muted-foreground"
+          >
             Balance total
-          </p>
+          </h2>
         </div>
-        <p className="text-4xl font-bold text-foreground">
+        <p className="numeric mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
           {formatCurrency(amount, currency)}
         </p>
-        <p className="text-sm text-muted-foreground">
+        <p className="mt-3 text-sm text-muted-foreground">
           {balance
             ? `Actualizado: ${formatRelativeTime(balance.updated_at)}`
             : "Crea una cuenta para ver tu balance"}
         </p>
-      </CardContent>
-    </Card>
+      </div>
+    </section>
   );
 }

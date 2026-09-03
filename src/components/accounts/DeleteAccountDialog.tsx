@@ -45,7 +45,7 @@ export function DeleteAccountDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10 sm:mx-0">
+          <div className="mb-2 flex size-12 items-center justify-center rounded-full bg-destructive/12">
             <AlertTriangle className="h-6 w-6 text-destructive" />
           </div>
           <DialogTitle>Eliminar cuenta</DialogTitle>

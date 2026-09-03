@@ -164,12 +164,12 @@ export function AccountForm({
   const defaultTrigger =
     mode === "create" ? (
       <Button>
-        <Wallet className="mr-2 h-4 w-4" />
+        <Wallet className="size-4" aria-hidden="true" />
         Nueva cuenta
       </Button>
     ) : (
       <Button variant="ghost" size="sm">
-        <Wallet className="mr-2 h-4 w-4" />
+        <Wallet className="size-4" aria-hidden="true" />
         Editar
       </Button>
     );
@@ -179,8 +179,8 @@ export function AccountForm({
       <DialogTrigger render={trigger ?? defaultTrigger} />
       <DialogContent>
         <DialogHeader>
-          <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-secondary sm:mx-0">
-            <Wallet className="h-5 w-5 text-muted-foreground" />
+          <div className="mb-2 flex size-10 items-center justify-center rounded-xl bg-primary/10">
+            <Wallet className="size-5 text-primary" aria-hidden="true" />
           </div>
           <DialogTitle>
             {mode === "create" ? "Nueva cuenta" : "Editar cuenta"}

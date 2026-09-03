@@ -105,35 +105,43 @@ export function TransactionsClient({
   return (
     <div className="space-y-6">
       <FadeIn direction="up" delay={1}>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Transacciones</h1>
+            <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              Transacciones
+            </h1>
             <p className="text-sm text-muted-foreground">
               Revisa y gestiona todos tus movimientos.
             </p>
           </div>
           <Button onClick={handleNew}>
-            <Plus className="mr-2 h-4 w-4" />
+            <Plus className="size-4" aria-hidden="true" />
             Nueva transacción
           </Button>
         </div>
       </FadeIn>
 
       <FadeIn direction="up" delay={2}>
-        <TransactionFilters
-          accounts={accounts}
-          categories={allCategories}
-          from_date={filters.from_date}
-          to_date={filters.to_date}
-          account_id={filters.account_id}
-          category_id={filters.category_id}
-          onChange={handleFiltersChange}
-        />
+        <div className="glass-card rounded-2xl p-4">
+          <TransactionFilters
+            accounts={accounts}
+            categories={allCategories}
+            from_date={filters.from_date}
+            to_date={filters.to_date}
+            account_id={filters.account_id}
+            category_id={filters.category_id}
+            onChange={handleFiltersChange}
+          />
+        </div>
       </FadeIn>
 
       {loading ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-border bg-card/50 py-16 text-sm text-muted-foreground">
-          <Loader2 className="mb-3 h-6 w-6 animate-spin" />
+        <div
+          role="status"
+          aria-live="polite"
+          className="glass-card flex flex-col items-center justify-center rounded-2xl py-16 text-sm text-muted-foreground"
+        >
+          <Loader2 className="mb-3 size-6 animate-spin" aria-hidden="true" />
           Cargando transacciones...
         </div>
       ) : (

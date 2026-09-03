@@ -70,8 +70,8 @@ export function CategoryForm({ open, onClose, category }: CategoryFormProps) {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent key={category?.id ?? "new"} className="sm:max-w-[480px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-secondary sm:mx-0">
-            <Tags className="h-5 w-5 text-muted-foreground" />
+          <div className="mb-2 flex size-10 items-center justify-center rounded-xl bg-primary/10">
+            <Tags className="size-5 text-primary" aria-hidden="true" />
           </div>
           <DialogTitle>
             {isEditing ? "Editar categoría" : "Nueva categoría"}

@@ -3,7 +3,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { UserMenu } from "@/components/auth/UserMenu";
-import { NavBar } from "@/components/layout/NavBar";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { DesktopNav, MobileTabBar } from "@/components/layout/NavBar";
 import { getServerSession } from "@/core/services/auth.service";
 
 export const metadata: Metadata = {
@@ -26,26 +27,32 @@ export default async function DashboardLayout({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-10 border-b border-border bg-background/80 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <header className="sticky top-0 z-30 px-4 pt-[calc(env(safe-area-inset-top)+12px)] sm:px-6">
+        <div className="glass mx-auto flex h-14 max-w-5xl items-center justify-between gap-2 rounded-2xl px-3 sm:h-16 sm:px-4">
           <Link
             href="/dashboard"
-            className="group flex items-center gap-2 rounded-lg p-1 transition-colors hover:bg-muted"
+            className="group flex items-center gap-2.5 rounded-xl p-1 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring/60"
           >
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground text-background font-bold transition-transform duration-200 group-hover:scale-105">
+            <span className="flex size-8 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-[oklch(0.62_0.22_330)] font-bold text-primary-foreground shadow-md shadow-primary/30 transition-transform duration-300 group-hover:scale-105">
               F
-            </div>
+            </span>
             <span className="text-lg font-bold tracking-tight">FinApp</span>
           </Link>
 
-          <NavBar session={session} />
-          <div className="hidden md:flex">
+          <DesktopNav />
+
+          <div className="flex items-center gap-1">
+            <ThemeToggle />
             <UserMenu session={session} />
           </div>
         </div>
       </header>
 
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 pb-[calc(env(safe-area-inset-bottom)+96px)] md:pb-8">
+        {children}
+      </main>
+
+      <MobileTabBar />
     </div>
   );
 }

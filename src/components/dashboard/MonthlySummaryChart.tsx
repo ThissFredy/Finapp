@@ -9,7 +9,6 @@ import {
 import type { MonthlySummary } from "@/core/models/dashboard";
 import { formatCurrency } from "@/core/utils/currency";
 import { AnimatedCard } from "@/components/ui/motion";
-import { TrendingUp } from "lucide-react";
 
 interface MonthlySummaryChartProps {
   data: MonthlySummary;
@@ -22,18 +21,13 @@ export function MonthlySummaryChart({ data }: MonthlySummaryChartProps) {
 
   return (
     <AnimatedCard>
-      <div className="flex items-center gap-2">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary">
-          <TrendingUp className="h-4 w-4 text-muted-foreground" />
-        </div>
-        <div>
-          <h2 className="text-lg font-semibold text-card-foreground">
-            Ingresos vs Gastos
-          </h2>
-          <p className="text-xs text-muted-foreground">
-            Resumen del mes actual en {data.currency}
-          </p>
-        </div>
+      <div>
+        <h2 className="text-lg font-semibold tracking-tight text-card-foreground">
+          Ingresos vs Gastos
+        </h2>
+        <p className="text-xs text-muted-foreground">
+          Resumen del mes actual en {data.currency}
+        </p>
       </div>
 
       <ChartContainer
@@ -70,18 +64,18 @@ export function MonthlySummaryChart({ data }: MonthlySummaryChartProps) {
               />
             }
           />
-          <Bar dataKey="income" fill="var(--chart-1)" radius={[6, 6, 0, 0]} />
-          <Bar dataKey="expense" fill="var(--chart-2)" radius={[6, 6, 0, 0]} />
+          <Bar dataKey="income" fill="var(--chart-1)" radius={[8, 8, 0, 0]} maxBarSize={48} />
+          <Bar dataKey="expense" fill="var(--chart-2)" radius={[8, 8, 0, 0]} maxBarSize={48} />
         </BarChart>
       </ChartContainer>
 
-      <div className="mt-4 flex items-center justify-between rounded-xl bg-secondary/50 px-4 py-3 text-sm">
+      <div className="mt-4 flex items-center justify-between rounded-2xl bg-income/10 px-4 py-3 text-sm">
         <span className="text-muted-foreground">Balance neto del mes:</span>
         <span
           className={
             data.net_savings >= 0
-              ? "font-semibold text-emerald-600"
-              : "font-semibold text-rose-600"
+              ? "numeric font-semibold text-income"
+              : "numeric font-semibold text-expense"
           }
         >
           {formatCurrency(data.net_savings, data.currency)}

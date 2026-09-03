@@ -120,14 +120,27 @@ export function UpcomingPaymentsList({
       {/* Navegación de mes */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="icon" onClick={handlePrevMonth}>
-            <ChevronLeft className="h-4 w-4" />
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={handlePrevMonth}
+            aria-label="Mes anterior"
+          >
+            <ChevronLeft className="size-4" aria-hidden="true" />
           </Button>
-          <span className="text-lg font-semibold min-w-[180px] text-center">
+          <span
+            className="min-w-[170px] text-center text-base font-semibold sm:min-w-[180px]"
+            aria-live="polite"
+          >
             {monthNames[month - 1]} {year}
           </span>
-          <Button variant="outline" size="icon" onClick={handleNextMonth}>
-            <ChevronRight className="h-4 w-4" />
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={handleNextMonth}
+            aria-label="Mes siguiente"
+          >
+            <ChevronRight className="size-4" aria-hidden="true" />
           </Button>
         </div>
       </div>
@@ -138,23 +151,27 @@ export function UpcomingPaymentsList({
         <SummaryPill
           label="Pendientes"
           value={String(summary.pendingCount)}
-          valueClassName="text-amber-600"
+          valueClassName="text-amber-600 dark:text-amber-400"
         />
         <SummaryPill
           label="Pagados"
           value={String(summary.paidCount)}
-          valueClassName="text-emerald-600"
+          valueClassName="text-income"
         />
       </div>
 
       {/* Lista agrupada por fecha */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-border bg-card/50 py-16 text-sm text-muted-foreground">
-          <Loader2 className="mb-3 h-6 w-6 animate-spin" />
+        <div
+          role="status"
+          aria-live="polite"
+          className="glass-card flex flex-col items-center justify-center rounded-2xl py-16 text-sm text-muted-foreground"
+        >
+          <Loader2 className="mb-3 size-6 animate-spin" aria-hidden="true" />
           Cargando pagos...
         </div>
       ) : grouped.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-border bg-card/50 py-12 text-center text-sm text-muted-foreground">
+        <div className="glass-card rounded-2xl border-dashed py-12 text-center text-sm text-muted-foreground">
           No hay suscripciones con corte en este mes.
         </div>
       ) : (
@@ -174,11 +191,11 @@ export function UpcomingPaymentsList({
                   return (
                     <div
                       key={s.id}
-                      className="group flex items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3 transition-all duration-200 hover:bg-muted/40"
+                      className="group flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-background/40 px-4 py-3 transition-all duration-200 hover:bg-background/70"
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <div
-                          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
+                          className="flex size-9 shrink-0 items-center justify-center rounded-full"
                           style={{
                             backgroundColor: s.category_color
                               ? `${s.category_color}22`
@@ -187,11 +204,11 @@ export function UpcomingPaymentsList({
                         >
                           {s.category_color ? (
                             <CategoryIcon
-                              className="h-4 w-4"
+                              className="size-4"
                               style={{ color: s.category_color }}
                             />
                           ) : (
-                            <CalendarClock className="h-4 w-4 text-muted-foreground" />
+                            <CalendarClock className="size-4 text-muted-foreground" aria-hidden="true" />
                           )}
                         </div>
                         <div className="min-w-0">
@@ -203,16 +220,16 @@ export function UpcomingPaymentsList({
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold tabular-nums">
+                      <div className="flex shrink-0 items-center gap-2">
+                        <span className="numeric text-sm font-semibold">
                           {formatCurrency(s.amount, s.currency as Currency)}
                         </span>
                         {s.is_paid_this_cycle ? (
                           <Badge
                             variant="secondary"
-                            className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-500/15 dark:text-emerald-400"
+                            className="bg-income/12 text-income hover:bg-income/20"
                           >
-                            <CheckCircle2 className="mr-1 h-3 w-3" />
+                            <CheckCircle2 className="mr-1 size-3" aria-hidden="true" />
                             Pagado
                           </Badge>
                         ) : (
@@ -246,9 +263,11 @@ function SummaryPill({
   valueClassName?: string;
 }) {
   return (
-    <div className="rounded-xl border border-border bg-card p-3 text-center">
+    <div className="glass-card rounded-2xl p-3 text-center">
       <p className="text-xs text-muted-foreground">{label}</p>
-      <p className={cn("text-lg font-bold", valueClassName)}>{value}</p>
+      <p className={cn("numeric mt-1 text-base font-bold sm:text-lg", valueClassName)}>
+        {value}
+      </p>
     </div>
   );
 }

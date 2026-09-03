@@ -68,10 +68,10 @@ export function SubscriptionCard({
   const categoryIconName = category_icon;
 
   return (
-    <div className="group flex flex-col gap-4 rounded-2xl border border-border bg-card p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md sm:flex-row sm:items-center sm:justify-between">
+    <div className="glass-card group card-lift flex flex-col gap-4 rounded-2xl p-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-3 min-w-0">
         <div
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-transform duration-200 group-hover:scale-105"
+          className="flex size-10 shrink-0 items-center justify-center rounded-full transition-transform duration-200 group-hover:scale-105"
           style={{
             backgroundColor: category_color
               ? `${category_color}22`
@@ -80,11 +80,11 @@ export function SubscriptionCard({
         >
           {category_color ? (
             React.createElement(getIconByName(categoryIconName), {
-              className: "h-5 w-5",
+              className: "size-5",
               style: { color: category_color },
             })
           ) : (
-            <CalendarClock className="h-5 w-5 text-muted-foreground" />
+            <CalendarClock className="size-5 text-muted-foreground" aria-hidden="true" />
           )}
         </div>
 
@@ -95,7 +95,7 @@ export function SubscriptionCard({
             {isOverdue && (
               <Badge
                 variant="destructive"
-                className="text-xs bg-rose-100 text-rose-700 hover:bg-rose-100 dark:bg-rose-500/15 dark:text-rose-400"
+                className="text-xs bg-expense/12 text-expense hover:bg-expense/20"
               >
                 Vencida
               </Badge>
@@ -103,9 +103,9 @@ export function SubscriptionCard({
             {is_paid_this_cycle && (
               <Badge
                 variant="secondary"
-                className="text-xs bg-emerald-100 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-500/15 dark:text-emerald-400"
+                className="text-xs bg-income/12 text-income hover:bg-income/20"
               >
-                <CheckCircle2 className="mr-1 h-3 w-3" />
+                <CheckCircle2 className="mr-1 size-3" aria-hidden="true" />
                 Pagado
               </Badge>
             )}
@@ -120,7 +120,7 @@ export function SubscriptionCard({
             Próximo corte:{" "}
             <span
               className={cn(
-                isOverdue ? "font-medium text-rose-600" : "text-muted-foreground"
+                isOverdue ? "font-medium text-expense" : "text-muted-foreground"
               )}
             >
               {new Date(next_billing_date).toLocaleDateString("es-CO")}
@@ -130,7 +130,7 @@ export function SubscriptionCard({
       </div>
 
       <div className="flex items-center justify-between gap-3 sm:flex-col sm:items-end sm:justify-center">
-        <span className="text-base font-bold tabular-nums">
+        <span className="numeric text-base font-bold">
           {formatCurrency(amount, currency as Currency)}
         </span>
         <div className="flex items-center gap-1">
@@ -143,27 +143,26 @@ export function SubscriptionCard({
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                size="icon"
-                className="h-8 w-8"
-                aria-label="Acciones de suscripción"
+                size="icon-sm"
+                aria-label={`Acciones de suscripción ${name}`}
               >
-                <MoreVertical className="h-4 w-4" />
+                <MoreVertical className="size-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => onHistory(subscription)}>
-                <History className="mr-2 h-4 w-4" />
+                <History className="size-4" aria-hidden="true" />
                 Historial
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => onEdit(subscription)}>
-                <Pencil className="mr-2 h-4 w-4" />
+                <Pencil className="size-4" aria-hidden="true" />
                 Editar
               </DropdownMenuItem>
               <DropdownMenuItem
                 variant="destructive"
                 onClick={() => onDelete(subscription)}
               >
-                <Trash2 className="mr-2 h-4 w-4" />
+                <Trash2 className="size-4" aria-hidden="true" />
                 Eliminar
               </DropdownMenuItem>
             </DropdownMenuContent>

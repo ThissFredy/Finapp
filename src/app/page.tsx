@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import { buttonVariants } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { cn } from "@/lib/utils";
 import { FadeIn } from "@/components/ui/motion";
 import { getServerSession } from "@/core/services/auth.service";
@@ -45,18 +46,15 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background px-4">
-      {/* Subtle background decoration */}
-      <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center overflow-hidden">
-        <div className="absolute h-[600px] w-[600px] rounded-full bg-primary/[0.03] blur-3xl" />
-        <div className="absolute top-1/4 right-1/4 h-64 w-64 rounded-full bg-emerald-500/[0.04] blur-3xl" />
-        <div className="absolute bottom-1/4 left-1/4 h-64 w-64 rounded-full bg-blue-500/[0.04] blur-3xl" />
+    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 py-[calc(env(safe-area-inset-top)+env(safe-area-inset-bottom)+2rem)]">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
       </div>
 
       <main className="flex max-w-2xl flex-col items-center gap-10 text-center">
         <FadeIn direction="up" delay={1}>
           <div className="flex items-center gap-2.5">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-foreground text-background font-bold text-xl shadow-sm">
+            <div className="flex size-11 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-[oklch(0.62_0.22_330)] font-bold text-xl text-primary-foreground shadow-lg shadow-primary/30">
               F
             </div>
             <span className="text-2xl font-bold tracking-tight">FinApp</span>
@@ -81,14 +79,14 @@ export default async function HomePage() {
               href="/login"
               className={cn(
                 buttonVariants({ size: "lg" }),
-                "group min-w-[200px] gap-2 rounded-full px-6"
+                "group min-w-[200px] rounded-full px-6"
               )}
             >
               Comenzar ahora
-              <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+              <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true" />
             </Link>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Shield className="h-4 w-4" />
+              <Shield className="size-4" aria-hidden="true" />
               Inicio de sesión seguro con Google
             </div>
           </div>
@@ -96,16 +94,15 @@ export default async function HomePage() {
 
         <FadeIn direction="up" delay={4}>
           <div className="grid w-full gap-4 pt-4 sm:grid-cols-2">
-            {features.map((feature, index) => (
+            {features.map((feature) => (
               <div
                 key={feature.title}
-                className="group rounded-2xl border border-border bg-card/50 p-5 text-left transition-all duration-200 hover:-translate-y-0.5 hover:bg-card hover:shadow-md"
-                style={{ animationDelay: `${180 + index * 60}ms` }}
+                className="glass-card group rounded-2xl p-5 text-left transition-all duration-200 hover:-translate-y-0.5"
               >
-                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-secondary transition-colors group-hover:bg-primary/10">
-                  <feature.icon className="h-5 w-5 text-muted-foreground transition-colors group-hover:text-foreground" />
+                <div className="mb-3 flex size-10 items-center justify-center rounded-xl bg-primary/12 transition-colors group-hover:bg-primary/20">
+                  <feature.icon className="size-5 text-primary" aria-hidden="true" />
                 </div>
-                <h3 className="font-medium text-foreground">{feature.title}</h3>
+                <h3 className="font-semibold text-foreground">{feature.title}</h3>
                 <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
                   {feature.description}
                 </p>

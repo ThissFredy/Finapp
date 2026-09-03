@@ -129,8 +129,8 @@ export function RegisterPaymentDialog({
     <Dialog open={!!subscription} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-secondary sm:mx-0">
-            <CheckCircle2 className="h-5 w-5 text-muted-foreground" />
+          <div className="mb-2 flex size-10 items-center justify-center rounded-xl bg-primary/10">
+            <CheckCircle2 className="size-5 text-primary" aria-hidden="true" />
           </div>
           <DialogTitle>Registrar pago de suscripción</DialogTitle>
           <DialogDescription>
@@ -140,17 +140,17 @@ export function RegisterPaymentDialog({
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Info de la suscripción (solo lectura) */}
-          <div className="rounded-lg border bg-muted/50 p-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-semibold">{subscription.name}</p>
+          <div className="rounded-2xl border border-border/60 bg-muted/40 p-3.5">
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="truncate text-sm font-semibold">{subscription.name}</p>
                 <p className="text-xs text-muted-foreground">
                   {subscription.billing_cycle === "MONTHLY" ? "Mensual" : "Anual"} ·{" "}
                   Próximo corte:{" "}
                   {new Date(subscription.next_billing_date).toLocaleDateString("es-CO")}
                 </p>
               </div>
-              <span className="text-sm font-bold">
+              <span className="numeric shrink-0 text-sm font-bold">
                 {formatCurrency(subscription.amount, subscription.currency as Currency)}
               </span>
             </div>

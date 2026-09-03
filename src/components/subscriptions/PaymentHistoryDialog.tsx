@@ -66,8 +66,8 @@ export function PaymentHistoryDialog({
     <Dialog open={!!subscription} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-secondary sm:mx-0">
-            <History className="h-5 w-5 text-muted-foreground" />
+          <div className="mb-2 flex size-10 items-center justify-center rounded-xl bg-primary/10">
+            <History className="size-5 text-primary" aria-hidden="true" />
           </div>
           <DialogTitle>
             Historial de pagos{subscription ? `: ${subscription.name}` : ""}
@@ -85,10 +85,10 @@ export function PaymentHistoryDialog({
           </div>
         ) : (
           <div className="space-y-1">
-            <div className="overflow-hidden rounded-2xl border bg-card">
+            <div className="glass-card overflow-hidden rounded-2xl p-2">
               {items.map((t, index) => (
                 <div key={t.id}>
-                  <div className="flex items-center justify-between gap-3 px-4 py-3 hover:bg-muted/40">
+                  <div className="flex items-center justify-between gap-3 px-3 py-2.5 hover:bg-muted/50 rounded-xl transition-colors">
                     <div className="min-w-0">
                       <p className="truncate text-sm font-medium">
                         {t.description || "Pago de suscripción"}
@@ -98,7 +98,7 @@ export function PaymentHistoryDialog({
                         {t.account_name}
                       </p>
                     </div>
-                    <span className="text-sm font-semibold text-rose-600">
+                    <span className="numeric text-sm font-semibold text-expense">
                       -{formatCurrency(t.amount, t.currency as Currency)}
                     </span>
                   </div>
@@ -120,7 +120,7 @@ export function PaymentHistoryDialog({
                   disabled={page <= 1}
                   onClick={() => load(subscription!.id, page - 1)}
                 >
-                  <ChevronLeft className="mr-1 h-4 w-4" />
+                  <ChevronLeft className="size-4" aria-hidden="true" />
                   Anterior
                 </Button>
                 <Button
@@ -130,7 +130,7 @@ export function PaymentHistoryDialog({
                   onClick={() => load(subscription!.id, page + 1)}
                 >
                   Siguiente
-                  <ChevronRight className="ml-1 h-4 w-4" />
+                  <ChevronRight className="size-4" aria-hidden="true" />
                 </Button>
               </div>
             </div>

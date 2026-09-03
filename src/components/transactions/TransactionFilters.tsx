@@ -64,8 +64,8 @@ export function TransactionFilters({
   }
 
   return (
-    <div className="grid gap-1 sm:grid-cols-2 lg:grid-cols-4">
-      <div className="space-y-1">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="space-y-1.5">
         <Label htmlFor="from_date">Desde</Label>
         <Input
           id="from_date"
@@ -74,7 +74,7 @@ export function TransactionFilters({
           onChange={(e) => handleFromDateChange(e.target.value)}
         />
       </div>
-      <div className="space-y-1">
+      <div className="space-y-1.5">
         <Label htmlFor="to_date">Hasta</Label>
         <Input
           id="to_date"
@@ -86,8 +86,8 @@ export function TransactionFilters({
           onChange={(e) => handleToDateChange(e.target.value)}
         />
       </div>
-      <div className="space-y-1">
-        <Label>Cuenta</Label>
+      <div className="space-y-1.5">
+        <Label htmlFor="filter_account">Cuenta</Label>
         <Select
           value={account_id || "Todas"}
           onValueChange={(v) =>
@@ -99,7 +99,7 @@ export function TransactionFilters({
             })
           }
         >
-          <SelectTrigger>
+          <SelectTrigger id="filter_account" className="w-full">
             <SelectValue placeholder="Todas">
               {account_id
                 ? accounts.find((a) => a.id === account_id)?.name
@@ -116,8 +116,8 @@ export function TransactionFilters({
           </SelectContent>
         </Select>
       </div>
-      <div className="space-y-1">
-        <Label>Categoría</Label>
+      <div className="space-y-1.5">
+        <Label htmlFor="filter_category">Categoría</Label>
         <Select
           value={category_id || "Todas"}
           onValueChange={(v) =>
@@ -129,7 +129,7 @@ export function TransactionFilters({
             })
           }
         >
-          <SelectTrigger>
+          <SelectTrigger id="filter_category" className="w-full">
             <SelectValue placeholder="Todas">
               {category_id
                 ? categories.find((c) => c.id === category_id)?.name
@@ -160,7 +160,7 @@ export function TransactionFilters({
               })
             }
           >
-            <X className="mr-1.5 h-3.5 w-3.5" />
+            <X className="size-3.5" aria-hidden="true" />
             Limpiar filtros
           </Button>
         </div>

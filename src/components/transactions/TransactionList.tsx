@@ -29,7 +29,7 @@ export function TransactionList({
 
   if (items.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-border bg-card/50 py-12 text-center text-sm text-muted-foreground">
+      <div className="glass-card rounded-2xl border-dashed py-12 text-center text-sm text-muted-foreground">
         No hay transacciones que coincidan con los filtros seleccionados.
       </div>
     );
@@ -37,12 +37,9 @@ export function TransactionList({
 
   return (
     <div className="space-y-3">
-      <div className="overflow-hidden rounded-2xl border bg-card">
+      <div className="glass-card overflow-hidden rounded-2xl p-2">
         {items.map((t, index) => (
-          <div
-            key={t.id}
-            className="transition-colors hover:bg-muted/40"
-          >
+          <div key={t.id}>
             <AnimatedListItem index={index}>
               <TransactionItem
                 transaction={t}
@@ -51,14 +48,14 @@ export function TransactionList({
               />
             </AnimatedListItem>
             {index < items.length - 1 && (
-              <div className="mx-3 h-px bg-border" />
+              <div className="mx-3 h-px bg-border/70" />
             )}
           </div>
         ))}
       </div>
 
-      <div className="flex items-center justify-between pt-2">
-        <p className="text-xs text-muted-foreground">
+      <div className="flex flex-wrap items-center justify-between gap-2 pt-2">
+        <p className="numeric text-xs text-muted-foreground" aria-live="polite">
           Página {page} de {totalPages} · {total_count} transacciones
         </p>
         <div className="flex gap-2">
@@ -68,7 +65,7 @@ export function TransactionList({
             disabled={page <= 1}
             onClick={() => onPageChange(page - 1)}
           >
-            <ChevronLeft className="mr-1 h-4 w-4" />
+            <ChevronLeft className="size-4" aria-hidden="true" />
             Anterior
           </Button>
           <Button
@@ -78,7 +75,7 @@ export function TransactionList({
             onClick={() => onPageChange(page + 1)}
           >
             Siguiente
-            <ChevronRight className="ml-1 h-4 w-4" />
+            <ChevronRight className="size-4" aria-hidden="true" />
           </Button>
         </div>
       </div>

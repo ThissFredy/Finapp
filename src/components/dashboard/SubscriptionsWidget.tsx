@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarClock, RefreshCw, ArrowRight } from "lucide-react";
+import { CalendarClock, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { UserSubscriptionItem } from "@/core/models/dashboard";
 import { formatCurrency } from "@/core/utils/currency";
@@ -36,42 +36,36 @@ export function SubscriptionsWidget({
 
   return (
     <AnimatedCard>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary">
-            <RefreshCw className="h-4 w-4 text-muted-foreground" />
-          </div>
-          <h2 className="text-lg font-semibold text-card-foreground">
-            Suscripciones
-          </h2>
-        </div>
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-lg font-semibold tracking-tight text-card-foreground">
+          Suscripciones
+        </h2>
         <Link
           href="/subscriptions"
-          className="group inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          className="group inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm text-primary transition-colors hover:bg-primary/10 outline-none focus-visible:ring-2 focus-visible:ring-ring/60"
         >
           Ver todas
-          <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+          <ArrowRight className="size-3.5 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true" />
         </Link>
       </div>
 
       {subscriptions.length === 0 ? (
-        <p className="mt-5 text-sm text-muted-foreground">
+        <p className="mt-4 text-sm text-muted-foreground">
           No tienes suscripciones registradas.
         </p>
       ) : (
-        <div className="mt-5 space-y-2">
-          {subscriptions.map((sub, index) => (
+        <div className="mt-4 space-y-2">
+          {subscriptions.map((sub) => (
             <div
               key={sub.id}
-              className="group flex items-center justify-between rounded-xl border border-border bg-background/50 p-3 transition-all duration-200 hover:bg-background hover:shadow-sm"
-              style={{ animationDelay: `${index * 40}ms` }}
+              className="group flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-background/40 p-3 transition-all duration-200 hover:bg-background/70"
             >
-              <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary transition-colors group-hover:bg-primary/10">
-                  <CalendarClock className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-foreground" />
+              <div className="flex min-w-0 items-center gap-3">
+                <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 transition-colors group-hover:bg-primary/20">
+                  <CalendarClock className="size-4 text-primary" aria-hidden="true" />
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-foreground">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium text-foreground">
                     {sub.name}
                   </p>
                   <p className="text-xs text-muted-foreground">
@@ -80,15 +74,15 @@ export function SubscriptionsWidget({
                   </p>
                 </div>
               </div>
-              <div className="text-right">
-                <p className="text-sm font-semibold text-foreground">
+              <div className="shrink-0 text-right">
+                <p className="numeric text-sm font-semibold text-foreground">
                   {formatCurrency(sub.amount, sub.currency)}
                 </p>
                 <p
                   className={cn(
                     "text-xs",
                     sub.next_billing_date < today
-                      ? "font-medium text-rose-600"
+                      ? "font-medium text-expense"
                       : "text-muted-foreground"
                   )}
                 >

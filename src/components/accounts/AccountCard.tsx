@@ -46,16 +46,16 @@ export function AccountCard({ account }: AccountCardProps) {
   return (
     <Card
       className={cn(
-        "group transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md",
+        "group card-lift",
         isInactive && "opacity-60",
       )}
     >
       <CardHeader className="flex flex-row items-start justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-secondary-foreground transition-colors group-hover:bg-primary/10">
+          <div className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary/20">
             <AccountTypeIcon
               type={account.type}
-              className="transition-colors group-hover:text-foreground"
+              className="transition-colors"
             />
           </div>
           <div className="min-w-0">
@@ -68,11 +68,11 @@ export function AccountCard({ account }: AccountCardProps) {
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              size="icon"
+              size="icon-sm"
               aria-label="Acciones de cuenta"
-              className="h-8 w-8 opacity-60 transition-opacity group-hover:opacity-100"
+              className="opacity-70 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
             >
-              <MoreVertical className="h-4 w-4" />
+              <MoreVertical className="size-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -104,7 +104,7 @@ export function AccountCard({ account }: AccountCardProps) {
       </CardHeader>
 
       <CardContent className="space-y-3">
-        <p className="text-2xl font-bold tracking-tight">
+        <p className="numeric text-3xl font-bold tracking-tight">
           {formatCurrency(account.balance, account.currency)}
         </p>
         <div className="flex flex-wrap items-center gap-2">
@@ -112,7 +112,7 @@ export function AccountCard({ account }: AccountCardProps) {
           {isInactive ? (
             <Badge variant="outline">Inactiva</Badge>
           ) : (
-            <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-500/15 dark:text-emerald-400">
+            <Badge className="bg-income/12 text-income hover:bg-income/20">
               Activa
             </Badge>
           )}

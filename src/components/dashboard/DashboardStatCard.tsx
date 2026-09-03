@@ -21,32 +21,32 @@ export function DashboardStatCard({
   className,
 }: DashboardStatCardProps) {
   const trendClasses = {
-    positive: "text-emerald-600 bg-emerald-500/10",
-    negative: "text-rose-600 bg-rose-500/10",
+    positive: "text-income bg-income/12",
+    negative: "text-expense bg-expense/12",
     neutral: "text-foreground bg-secondary",
   };
 
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md",
+        "glass-card group relative overflow-hidden rounded-2xl p-5 card-lift",
         className,
       )}
     >
-      <div className="flex items-start justify-between">
-        <div>
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
           <p className="text-sm font-medium text-muted-foreground">{title}</p>
-          <p className="mt-2 text-2xl font-bold tracking-tight">
+          <p className="numeric mt-2 text-2xl font-bold tracking-tight">
             {formatCurrency(amount, currency)}
           </p>
         </div>
         <div
           className={cn(
-            "flex h-10 w-10 items-center justify-center rounded-xl transition-colors",
+            "flex size-10 shrink-0 items-center justify-center rounded-xl transition-colors",
             trendClasses[trend],
           )}
         >
-          <Icon className="h-5 w-5" />
+          <Icon className="size-5" aria-hidden="true" />
         </div>
       </div>
     </div>

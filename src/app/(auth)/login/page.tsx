@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { GoogleLoginButton } from "@/components/auth/GoogleLoginButton";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { FadeIn } from "@/components/ui/motion";
 import { getServerSession } from "@/core/services/auth.service";
 
@@ -26,16 +27,15 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   }
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background px-4">
-      {/* Background decoration */}
-      <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center">
-        <div className="absolute h-[500px] w-[500px] rounded-full bg-primary/[0.03] blur-3xl" />
+    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 py-[calc(env(safe-area-inset-top)+env(safe-area-inset-bottom)+2rem)]">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
       </div>
 
       <FadeIn direction="scale" className="w-full max-w-sm">
-        <div className="rounded-2xl border border-border bg-card p-8 shadow-sm">
+        <div className="glass-strong rounded-3xl p-8 shadow-2xl">
           <div className="mb-8 flex flex-col items-center gap-4 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-foreground text-background font-bold text-2xl shadow-sm">
+            <div className="flex size-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-[oklch(0.62_0.22_330)] font-bold text-2xl text-primary-foreground shadow-lg shadow-primary/30">
               F
             </div>
             <div>
@@ -49,7 +49,10 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           </div>
 
           {params.error === "auth_failed" && (
-            <div className="mb-4 rounded-lg border border-destructive/20 bg-destructive/10 p-3 text-sm text-destructive animate-fade-in">
+            <div
+              role="alert"
+              className="mb-4 rounded-2xl border border-destructive/25 bg-destructive/10 p-3 text-sm text-destructive animate-fade-in"
+            >
               No se pudo completar el inicio de sesión. Inténtalo de nuevo.
             </div>
           )}

@@ -14,7 +14,8 @@ export function ColorPicker({ value, onChange }: ColorPickerProps) {
         type="color"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="h-10 w-14 cursor-pointer rounded-md border border-input"
+        aria-label="Seleccionar color"
+        className="h-11 w-16 cursor-pointer rounded-xl border border-input bg-transparent p-1 md:h-10"
       />
       <Input
         value={value}
@@ -22,6 +23,7 @@ export function ColorPicker({ value, onChange }: ColorPickerProps) {
         maxLength={7}
         className="w-28 font-mono uppercase"
         placeholder="#6B7280"
+        aria-label="Color en formato hexadecimal"
       />
     </div>
   );

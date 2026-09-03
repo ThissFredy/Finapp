@@ -86,14 +86,15 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-md border border-input bg-muted">
-          <SelectedIcon className="h-5 w-5" />
+        <div className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-input bg-primary/10">
+          <SelectedIcon className="size-5 text-primary" aria-hidden="true" />
         </div>
         <Input
           value={value}
           readOnly
           className="flex-1 font-mono"
           placeholder="Selecciona un ícono"
+          aria-label="Ícono seleccionado"
         />
       </div>
 
@@ -102,22 +103,29 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
         placeholder="Buscar ícono..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
+        aria-label="Buscar ícono"
       />
 
-      <div className="grid grid-cols-6 gap-2 rounded-md border border-input p-3 max-h-48 overflow-y-auto">
+      <div
+        role="listbox"
+        aria-label="Íconos disponibles"
+        className="grid grid-cols-6 gap-2 rounded-xl border border-input p-3 max-h-48 overflow-y-auto"
+      >
         {filteredIcons.map(([name, Icon]) => (
           <button
             key={name}
             type="button"
+            role="option"
+            aria-selected={value === name}
             onClick={() => onChange(name)}
-            className={`flex h-10 w-10 items-center justify-center rounded-md border transition-colors ${
+            className={`flex size-10 min-w-10 items-center justify-center rounded-xl border transition-colors press-scale ${
               value === name
-                ? "border-primary bg-primary/10"
+                ? "border-primary bg-primary/15 text-primary"
                 : "border-input hover:bg-muted"
             }`}
             title={name}
           >
-            <Icon className="h-5 w-5" />
+            <Icon className="size-5" aria-hidden="true" />
           </button>
         ))}
       </div>

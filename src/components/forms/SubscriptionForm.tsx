@@ -99,8 +99,8 @@ export function SubscriptionForm({
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-secondary sm:mx-0">
-            <CalendarClock className="h-5 w-5 text-muted-foreground" />
+          <div className="mb-2 flex size-10 items-center justify-center rounded-xl bg-primary/10">
+            <CalendarClock className="size-5 text-primary" aria-hidden="true" />
           </div>
           <DialogTitle>
             {isEdit ? "Editar suscripción" : "Nueva suscripción"}

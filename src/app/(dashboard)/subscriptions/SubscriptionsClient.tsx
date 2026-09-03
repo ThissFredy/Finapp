@@ -72,15 +72,17 @@ export function SubscriptionsClient({
   return (
     <div className="space-y-6">
       <FadeIn direction="up" delay={1}>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Suscripciones</h1>
+            <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              Suscripciones
+            </h1>
             <p className="text-sm text-muted-foreground">
               Controla tus pagos recurrentes y nunca te sorprenda un cargo.
             </p>
           </div>
           <Button onClick={handleNew}>
-            <Plus className="mr-2 h-4 w-4" />
+            <Plus className="size-4" aria-hidden="true" />
             Nueva suscripción
           </Button>
         </div>

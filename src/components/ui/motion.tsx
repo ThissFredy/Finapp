@@ -72,7 +72,7 @@ export function AnimatedCard({
   return (
     <div
       className={cn(
-        "rounded-xl border border-border bg-card p-5 shadow-sm card-lift animate-fade-in-up",
+        "glass-card rounded-2xl p-5 card-lift animate-fade-in-up",
         className
       )}
       {...props}

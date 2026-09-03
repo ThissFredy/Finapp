@@ -9,13 +9,12 @@ export function SubscriptionStatusBadge({ status }: SubscriptionStatusBadgeProps
   const config = {
     ACTIVE: {
       label: "Activa",
-      className:
-        "bg-emerald-100 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-500/15 dark:text-emerald-400",
+      className: "bg-income/12 text-income hover:bg-income/20",
     },
     PAUSED: {
       label: "Pausada",
       className:
-        "bg-amber-100 text-amber-700 hover:bg-amber-100 dark:bg-amber-500/15 dark:text-amber-400",
+        "bg-amber-500/15 text-amber-700 hover:bg-amber-500/25 dark:text-amber-400",
     },
     CANCELLED: {
       label: "Cancelada",

@@ -19,12 +19,12 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-card/50 px-6 py-16 text-center animate-fade-in-up",
+        "glass-card flex flex-col items-center justify-center rounded-3xl border-dashed px-6 py-16 text-center animate-fade-in-up",
         className
       )}
     >
-      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary">
-        <Icon className="h-7 w-7 text-muted-foreground" />
+      <div className="flex size-14 items-center justify-center rounded-2xl bg-primary/12">
+        <Icon className="size-7 text-primary" aria-hidden="true" />
       </div>
       <h3 className="mt-5 text-lg font-semibold text-foreground">{title}</h3>
       <p className="mt-2 max-w-sm text-sm text-muted-foreground leading-relaxed">

@@ -53,15 +53,15 @@ export function CategoriesClient({
   return (
     <div className="space-y-8">
       <FadeIn direction="up" delay={1}>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Categorías</h1>
+            <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Categorías</h1>
             <p className="text-sm text-muted-foreground">
               Clasifica tus ingresos y gastos para entender mejor tu dinero.
             </p>
           </div>
           <Button onClick={handleNew}>
-            <Plus className="mr-2 h-4 w-4" />
+            <Plus className="size-4" aria-hidden="true" />
             Nueva categoría
           </Button>
         </div>
@@ -70,10 +70,10 @@ export function CategoriesClient({
       <section className="space-y-4">
         <FadeIn direction="up" delay={2}>
           <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/10">
-              <Tag className="h-4 w-4 text-emerald-600" />
+            <div className="flex size-8 items-center justify-center rounded-lg bg-income/12">
+              <Tag className="size-4 text-income" aria-hidden="true" />
             </div>
-            <h2 className="text-lg font-semibold text-emerald-600">Ingresos</h2>
+            <h2 className="text-lg font-semibold text-income">Ingresos</h2>
           </div>
         </FadeIn>
         {income.length === 0 ? (
@@ -101,10 +101,10 @@ export function CategoriesClient({
       <section className="space-y-4">
         <FadeIn direction="up" delay={3}>
           <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-rose-500/10">
-              <Tag className="h-4 w-4 text-rose-600" />
+            <div className="flex size-8 items-center justify-center rounded-lg bg-expense/12">
+              <Tag className="size-4 text-expense" aria-hidden="true" />
             </div>
-            <h2 className="text-lg font-semibold text-rose-600">Gastos</h2>
+            <h2 className="text-lg font-semibold text-expense">Gastos</h2>
           </div>
         </FadeIn>
         {expense.length === 0 ? (

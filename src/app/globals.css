@@ -343,11 +343,10 @@
     box-shadow: inset 0 1px 0 0 var(--glass-highlight), var(--glass-shadow);
   }
 
-  /* Card sutil — translúcida pero legible para datos financieros */
+  /* Card sutil — translúcida SIN blur: descansa sobre fondo estático
+     (el mesh ya es difuso), el blur aquí es costo GPU invisible */
   .glass-card {
     background: var(--card);
-    -webkit-backdrop-filter: blur(16px) saturate(1.3);
-    backdrop-filter: blur(16px) saturate(1.3);
     border: 1px solid var(--border);
     box-shadow: inset 0 1px 0 0 var(--glass-highlight);
   }
